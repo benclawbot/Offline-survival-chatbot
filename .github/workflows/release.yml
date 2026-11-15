@@ -1,4 +1,4 @@
-name: Build and release v0.01
+name: Build and release v0.02
 # Builds the checked-in main branch with checksum-verified assets.
 
 on:
@@ -35,12 +35,12 @@ jobs:
           echo "APK size: $bytes bytes"
           test "$bytes" -lt 2147483648
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
-          cp "$apk" Offline-Survival-Chatbot-v0.01.apk
-          sha256sum Offline-Survival-Chatbot-v0.01.apk > Offline-Survival-Chatbot-v0.01.apk.sha256
-      - name: Publish v0.01
+          cp "$apk" Offline-Survival-Chatbot-v0.02.apk
+          sha256sum Offline-Survival-Chatbot-v0.02.apk > Offline-Survival-Chatbot-v0.02.apk.sha256
+      - name: Publish v0.02
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create v0.01 Offline-Survival-Chatbot-v0.01.apk Offline-Survival-Chatbot-v0.01.apk.sha256 \
-            --target "$GITHUB_SHA" --title "Offline Survival Chatbot v0.01" \
-            --notes "First experimental all-in-one Android build. Includes the Qwen model and Essentials offline reference library. Signed with an automatically generated debug key; future builds may require uninstalling this version first. Verify safety-critical information with authoritative sources."
+          gh release create v0.02 Offline-Survival-Chatbot-v0.02.apk Offline-Survival-Chatbot-v0.02.apk.sha256 \
+            --target "$GITHUB_SHA" --title "Offline Survival Chatbot v0.02" \
+            --notes "Experimental ARM64 build with a new icon and smaller package. Installation and runtime on the CMF Phone 2 Pro have not yet been verified. Includes the Qwen model and Essentials offline reference library. Signed with an automatically generated debug key; future builds may require uninstalling this version first. Verify safety-critical information with authoritative sources."

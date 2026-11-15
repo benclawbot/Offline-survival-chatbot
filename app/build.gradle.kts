@@ -14,10 +14,11 @@ android {
 
     defaultConfig {
         applicationId = "com.localchat"
+        ndk { abiFilters += "arm64-v8a" }
         minSdk = 31
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.02"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -44,7 +45,7 @@ android {
 
     // The offline dataset and LiteRT model are already compressed; storing them verbatim
     // keeps the single sideload APK near 1.8 GB and avoids a slow, wasteful recompression.
-    androidResources { noCompress += listOf("zip", "task") }
+    androidResources { noCompress += listOf("zip") }
 
 
     testOptions {
@@ -52,6 +53,7 @@ android {
     }
 
     packaging {
+        jniLibs.useLegacyPackaging = true
         resources.excludes += setOf(
             "/META-INF/{AL2.0,LGPL2.1}",
             "META-INF/DEPENDENCIES",
