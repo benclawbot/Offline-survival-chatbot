@@ -5,7 +5,7 @@
 
 **An offline-first Android chatbot for finding practical guidance in a searchable survival reference library.** It combines a compact on-device language model with the Essentials collection from [Survival LLM](https://github.com/anonnerdfrenzy/survival-llm). Once installed and set up, chat and reference lookup work without a network connection.
 
-**[Download the Android APK (v0.02)](https://github.com/benclawbot/Offline-survival-chatbot/releases/download/v0.02/Offline-Survival-Chatbot-v0.02.apk)** · [Release notes and checksum](https://github.com/benclawbot/Offline-survival-chatbot/releases/tag/v0.02)
+**[Download the Android APK (v0.03)](https://github.com/benclawbot/Offline-survival-chatbot/releases/download/v0.03/Offline-Survival-Chatbot-v0.03.apk)** · [Release notes and checksum](https://github.com/benclawbot/Offline-survival-chatbot/releases/tag/v0.03)
 
 > **Important:** This is an experimental reference aid, not an emergency service or a substitute for professional medical, rescue, or safety advice. A small language model can misunderstand questions or produce incorrect guidance. In immediate danger, contact local emergency services when possible and follow official instructions.
 
@@ -17,7 +17,7 @@ It is designed for people who want a portable reference for preparedness and pra
 
 ## Main features
 
-- **On-device chat:** Runs Qwen 2.5 0.5B Instruct through LiteRT-LM on Android. The model is included in the APK; there is no separate model download.
+- **On-device chat:** Runs Qwen 3 0.6B through LiteRT-LM on Android. The model is included in the APK; there is no separate model download.
 - **Offline reference search:** Searches the Essentials FTS5/BM25 index on-device, retrieves passage text from the included data shards, and returns article title, source, URL, and license information to the chatbot.
 - **Prepared survival and health material:** The Essentials collection includes emergency preparedness, first aid and emergency medicine, medical references, food and water safety, travel health, survival manuals, field sanitation, canning, repair, and appropriate technology material. See the bundled `SOURCES.md` for source and license details after first launch at the app data location.
 - **All-in-one sideload:** One APK contains the app, model, and compressed reference library. Google Play is not required.
@@ -36,14 +36,14 @@ The library is primarily English-language. It is a curated offline collection, n
 - Android 12 or newer (minimum API 31)
 - 64-bit ARM device recommended; built for `arm64-v8a`
 - Allow installation from the file manager/browser used to open the APK
-- APK size: approximately 1.84 GB
+- APK size: approximately 1.99 GB
 - Plan for several gigabytes of free space for Android’s app install and the extracted model and library; leave additional room for the OS and your other apps
 
-Download the [v0.02 all-in-one APK](https://github.com/benclawbot/Offline-survival-chatbot/releases/download/v0.02/Offline-Survival-Chatbot-v0.02.apk), install it, then open **Offline Survival Chatbot** and leave it open through the first-run extraction. The release APK is signed with a debug certificate for direct sideloading. It is suitable for installation, but future updates signed with a different key will not install over it; uninstalling first removes app data.
+Download the [v0.03 all-in-one APK](https://github.com/benclawbot/Offline-survival-chatbot/releases/download/v0.03/Offline-Survival-Chatbot-v0.03.apk), install it, then open **Offline Survival Chatbot** and leave it open through the first-run extraction. The bundled model loads automatically afterwards. The release APK is signed with a debug certificate for direct sideloading. It has a different signing key from v0.02, so uninstall v0.02 before installing it; uninstalling removes that version’s chats and app data. It is suitable for installation, but future updates signed with a different key will not install over it; uninstalling first removes app data.
 
 ## How local search works
 
-The app uses the library’s included SQLite FTS5 index. It tokenizes the question into search terms, queries the index with BM25 ranking, reads the matching passage bytes from the corresponding text shard, and adds those passages—with their title, source, URL, and license—to the assistant’s tool result. This is lexical search, not a separately bundled vector embedding model; exact terminology in the question can affect retrieval quality.
+For each question, the app searches the library’s included SQLite FTS5 index using a bundled SQLite engine, and supplies matching passages to the model. It tokenizes the question into search terms, queries the index with BM25 ranking, reads the matching passage bytes from the corresponding text shard, and adds those passages—with their title, source, URL, and license—to the assistant’s tool result. This is lexical search, not a separately bundled vector embedding model; exact terminology in the question can affect retrieval quality.
 
 ## Build from source
 
@@ -56,7 +56,7 @@ bash scripts/fetch-offline-assets.sh
 bash gradlew :app:assembleDebug
 ```
 
-The binary assets and APK are intentionally excluded from Git history because they total multiple gigabytes. The all-in-one APK and its SHA-256 checksum are available in the v0.02 release.
+The binary assets and APK are intentionally excluded from Git history because they total multiple gigabytes. The all-in-one APK and its SHA-256 checksum are available in the v0.03 release.
 
 
 ## Upstream projects and data
@@ -64,6 +64,6 @@ The binary assets and APK are intentionally excluded from Git history because th
 - App foundation: [LocalChat](https://github.com/NeuroMarshal/LocalChat)
 - Survival reference library: [Survival LLM](https://github.com/anonnerdfrenzy/survival-llm)
 - Runtime: [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM)
-- Model: [Qwen 2.5 0.5B Instruct, LiteRT community build](https://huggingface.co/litert-community/Qwen2.5-0.5B-Instruct)
+- Model: [Qwen 3 0.6B, LiteRT community build](https://huggingface.co/litert-community/Qwen3-0.6B)
 
 The application source inherits the base project’s Apache License 2.0; see [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE). Model and library data have their own licenses and terms. Refer to the included library attribution file and upstream model card before redistribution.
