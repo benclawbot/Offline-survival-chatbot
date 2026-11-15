@@ -38,7 +38,7 @@ The library is primarily English-language. It is a curated offline collection, n
 - APK size: approximately 2.4 GB
 - Plan for several gigabytes of free space for Android’s app install and the extracted model and library; leave additional room for the OS and your other apps
 
-Download the APK from the [v0.01 release](https://github.com/benclawbot/Offline-survival-chatbot/releases/tag/v0.01), install it, then open **Offline Survival Chatbot** and leave it open through the first-run extraction. The release APK is signed with a debug certificate for direct sideloading. It is suitable for installation, but future updates signed with a different key will not install over it; uninstalling first removes app data.
+Install the all-in-one APK, open **Offline Survival Chatbot**, and leave it open through the first-run extraction. The locally built APK is signed with a debug certificate for direct sideloading. It is suitable for installation, but future updates signed with a different key will not install over it; uninstalling first removes app data. A GitHub release has not yet been published.
 
 ## How local search works
 
@@ -55,7 +55,7 @@ First fetch the pinned, checksum-verified model and Essentials pack, then build:
 ./gradlew :app:assembleDebug
 ```
 
-The binary assets are intentionally excluded from Git history because they total multiple gigabytes. The ready-to-install all-in-one APK is attached to the GitHub release. The compact social preview image is `.github/social-preview.jpg` (1280 × 640, about 153 KB); set it in **Repository → Settings → General → Social preview** to update the repository link card.
+The binary assets and APK are intentionally excluded from Git history because they total multiple gigabytes. The compact social preview image is `.github/social-preview.jpg` (1280 × 640, about 153 KB); set it in **Repository → Settings → General → Social preview** to update the repository link card.
 
 ## Suggested repository topics
 
