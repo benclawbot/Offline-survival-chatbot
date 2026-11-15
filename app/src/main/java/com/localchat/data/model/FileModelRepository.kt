@@ -601,15 +601,15 @@ class FileModelRepository @Inject constructor(
         // litert-community/* — публичные, скачиваются без токена.
         val items = listOf(
             ModelInfo(
-                id = "qwen2-0-5b-instruct",
-                displayName = "Qwen 2 0.5B Instruct (offline)",
-                sizeBytes = 647_377_840,
-                expectedSha256 = "0f01cc004b8eb62b92ba6be85ed05a248ba0d2f78af94c4949b313eccfb4c157",
+                id = "qwen3-0-6b-instruct",
+                displayName = "Qwen 3 0.6B Instruct (offline)",
+                sizeBytes = 344_437_808,
+                expectedSha256 = "e3e290109da4388d65a17510a0c66af91c8039f52d2c465868dbc43c09a776cf",
                 accelerator = Accelerator.GPU,
                 source = ModelSource.HuggingFace(
-                    repoId = "litert-community/Qwen2-0.5B-Instruct",
-                    file = "Qwen2_0.5B_Instruct.litertlm",
-                    revision = "0e209e1",
+                    repoId = "litert-community/Qwen3-0.6B",
+                    file = "Qwen3-0.6B_dynamic_wi4b32_afp32.litertlm",
+                    revision = "111c6fb56c33a7efa8e59ffbefd6afaa39b9ad2c",
                 ),
                 contextSize = 4096,
                 maxTokens = 512,

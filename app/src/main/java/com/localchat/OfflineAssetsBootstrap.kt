@@ -31,7 +31,7 @@ object OfflineAssetsBootstrap {
         val app = context.applicationContext
         scope.launch {
             try {
-                val modelDir = File(app.filesDir, "models/qwen2-0-5b-instruct")
+                val modelDir = File(app.filesDir, "models/qwen3-0-6b-instruct")
                 val model = File(modelDir, MODEL_FILE)
                 if (model.length() != MODEL_BYTES) {
                     modelDir.mkdirs()
@@ -92,8 +92,8 @@ object OfflineAssetsBootstrap {
         }
     }
 
-    private const val MODEL_FILE = "Qwen2_0.5B_Instruct.litertlm"
-    private const val MODEL_BYTES = 647_377_840L
+    private const val MODEL_FILE = "Qwen3-0.6B_dynamic_wi4b32_afp32.litertlm"
+    private const val MODEL_BYTES = 344_437_808L
     // Sum of uncompressed file sizes in the official Essentials archive.
     private const val LIBRARY_BYTES = 3_234_164_481L
     private const val LIBRARY_SHA = "0e9fc46df8288c1aa9a81b87386acd224963b8a1b2fd44d51078089d3dee8686"

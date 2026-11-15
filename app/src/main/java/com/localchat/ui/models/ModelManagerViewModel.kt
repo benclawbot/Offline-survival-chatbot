@@ -28,7 +28,7 @@ class ModelManagerViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val bundled = "qwen2-0-5b-instruct"
+            val bundled = "qwen3-0-6b-instruct"
             states.first { items -> items.any { it.info.id == bundled && it is ModelState.Downloaded } }
             runCatching { repo.load(bundled) }.onFailure {
                 _toast.value = "Could not load the offline model: ${it.message ?: "error"}"

@@ -10,4 +10,4 @@ fetch() {
   echo "$expected  $target" | sha256sum --check --status || { echo "Checksum mismatch: $name" >&2; rm -f "$target"; exit 1; }
 }
 fetch 'library-lite.zip' 'https://github.com/anonnerdfrenzy/survival-llm/releases/download/library-2026-10-28/library-lite.zip.000' '0e9fc46df8288c1aa9a81b87386acd224963b8a1b2fd44d51078089d3dee8686'
-fetch 'Qwen2_0.5B_Instruct.litertlm' 'https://huggingface.co/litert-community/Qwen2-0.5B-Instruct/resolve/0e209e1/Qwen2_0.5B_Instruct.litertlm?download=true' '0f01cc004b8eb62b92ba6be85ed05a248ba0d2f78af94c4949b313eccfb4c157'
+fetch 'Qwen3-0.6B_dynamic_wi4b32_afp32.litertlm' 'https://huggingface.co/litert-community/Qwen3-0.6B/resolve/111c6fb56c33a7efa8e59ffbefd6afaa39b9ad2c/Qwen3-0.6B_dynamic_wi4b32_afp32.litertlm?download=true' 'e3e290109da4388d65a17510a0c66af91c8039f52d2c465868dbc43c09a776cf'

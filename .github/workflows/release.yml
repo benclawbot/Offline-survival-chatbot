@@ -1,5 +1,5 @@
 name: Build and release v0.03
-# Builds the checked-in main branch with checksum-verified assets.
+# Builds the checked-in main branch with checksum-verified assets and the smaller model.
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          bash gradlew :harness:run --no-daemon --args="$GITHUB_WORKSPACE/app/src/main/assets/Qwen2_0.5B_Instruct.litertlm Hello" | tee model-smoke.log
+          bash gradlew :harness:run --no-daemon --args="$GITHUB_WORKSPACE/app/src/main/assets/Qwen3-0.6B_dynamic_wi4b32_afp32.litertlm Hello" | tee model-smoke.log
           grep -q "engine initialized" model-smoke.log
       - name: Verify offline index supports FTS5 searches
         shell: bash
@@ -56,4 +56,4 @@ jobs:
         run: |
           gh release create v0.03 Offline-Survival-Chatbot-v0.03.apk Offline-Survival-Chatbot-v0.03.apk.sha256 \
             --target "$GITHUB_SHA" --title "Offline Survival Chatbot v0.03" \
-            --notes "Experimental ARM64 build with an English interface, bundled FTS5 search, automatic library retrieval, and a compatible Qwen2 model. On-device installation and inference are not yet verified. Includes the Qwen model and Essentials offline reference library. Signed with an automatically generated debug key; future builds may require uninstalling this version first. Verify safety-critical information with authoritative sources."
+            --notes "Experimental ARM64 build with an English interface, bundled FTS5 search, automatic library retrieval, and a compatible Qwen3 model. On-device installation and inference are not yet verified. Includes the Qwen model and Essentials offline reference library. Signed with an automatically generated debug key; future builds may require uninstalling this version first. Verify safety-critical information with authoritative sources."
