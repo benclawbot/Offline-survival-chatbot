@@ -1,10 +1,11 @@
 # Offline Survival Chatbot
 
-![Offline Survival Chatbot hero](.github/social-preview-v2.jpg)
+![Offline Survival Chatbot hero](.github/social-preview-v3.jpg)
 
-GitHub social preview: [`.github/social-preview-v2.jpg`](.github/social-preview-v2.jpg) (1280 × 640, compact JPEG). Set this image in **Repository → Settings → General → Social preview** to update the link card.
 
 **An offline-first Android chatbot for finding practical guidance in a searchable survival reference library.** It combines a compact on-device language model with the Essentials collection from [Survival LLM](https://github.com/anonnerdfrenzy/survival-llm). Once installed and set up, chat and reference lookup work without a network connection.
+
+**[Download the Android APK (v0.01)](https://github.com/benclawbot/Offline-survival-chatbot/releases/download/v0.01/Offline-Survival-Chatbot-v0.01.apk)** · [Release notes and checksum](https://github.com/benclawbot/Offline-survival-chatbot/releases/tag/v0.01)
 
 > **Important:** This is an experimental reference aid, not an emergency service or a substitute for professional medical, rescue, or safety advice. A small language model can misunderstand questions or produce incorrect guidance. In immediate danger, contact local emergency services when possible and follow official instructions.
 
@@ -38,7 +39,7 @@ The library is primarily English-language. It is a curated offline collection, n
 - APK size: approximately 2.05 GB
 - Plan for several gigabytes of free space for Android’s app install and the extracted model and library; leave additional room for the OS and your other apps
 
-Download the [v0.01 all-in-one APK](https://github.com/benclawbot/Offline-survival-chatbot/releases/tag/v0.01), install it, and open **Offline Survival Chatbot**, and leave it open through the first-run extraction. The release APK is signed with a debug certificate for direct sideloading. It is suitable for installation, but future updates signed with a different key will not install over it; uninstalling first removes app data.
+Download the [v0.01 all-in-one APK](https://github.com/benclawbot/Offline-survival-chatbot/releases/download/v0.01/Offline-Survival-Chatbot-v0.01.apk), install it, then open **Offline Survival Chatbot** and leave it open through the first-run extraction. The release APK is signed with a debug certificate for direct sideloading. It is suitable for installation, but future updates signed with a different key will not install over it; uninstalling first removes app data.
 
 ## How local search works
 
@@ -51,15 +52,12 @@ Requirements: JDK 21, Android SDK with platform 35 and build tools 35.0.0, and s
 First fetch the pinned, checksum-verified model and Essentials pack, then build:
 
 ```bash
-./scripts/fetch-offline-assets.sh
-./gradlew :app:assembleDebug
+bash scripts/fetch-offline-assets.sh
+bash gradlew :app:assembleDebug
 ```
 
-The binary assets and APK are intentionally excluded from Git history because they total multiple gigabytes. The all-in-one APK and its SHA-256 checksum are available in the v0.01 release. The compact social preview image is `.github/social-preview-v2.jpg` (1280 × 640, compact JPEG); set it in **Repository → Settings → General → Social preview** to update the repository link card.
+The binary assets and APK are intentionally excluded from Git history because they total multiple gigabytes. The all-in-one APK and its SHA-256 checksum are available in the v0.01 release.
 
-## Suggested repository topics
-
-`android`, `offline-ai`, `on-device-llm`, `local-llm`, `survival`, `preparedness`, `emergency-reference`, `first-aid`, `litert`, `kotlin`, `jetpack-compose`
 
 ## Upstream projects and data
 
