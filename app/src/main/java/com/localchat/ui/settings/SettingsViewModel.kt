@@ -53,14 +53,14 @@ class SettingsViewModel @Inject constructor(
 
     fun clearChats() = viewModelScope.launch {
         runCatching { chatRepo.deleteAllChats() }
-            .onSuccess { _toast.value = "История чатов очищена" }
-            .onFailure { _toast.value = "Не удалось очистить чаты: ${it.message ?: "ошибка"}" }
+            .onSuccess { _toast.value = "Chat history cleared" }
+            .onFailure { _toast.value = "Could not clear chats: ${it.message ?: "error"}" }
     }
 
     fun deleteAllModels() = viewModelScope.launch {
         runCatching { modelRepo.deleteAll() }
-            .onSuccess { _toast.value = "Модели удалены с устройства" }
-            .onFailure { _toast.value = "Не удалось удалить модели: ${it.message ?: "ошибка"}" }
+            .onSuccess { _toast.value = "Models removed from device" }
+            .onFailure { _toast.value = "Could not delete models: ${it.message ?: "error"}" }
     }
 
     fun consumeToast() { _toast.value = null }

@@ -96,9 +96,9 @@ fun ChatScreen(
             label = "${contextUsage.totalTokens}/${contextUsage.usedTokens}",
             progress = contextUsage.progress,
         )
-        loadingModel != null -> ModelTopMeter(label = "загрузка", progress = null)
+        loadingModel != null -> ModelTopMeter(label = "loading", progress = null)
         downloadingModel != null -> ModelTopMeter(
-            label = "скачивание ${(downloadingModel.progress * 100).roundToInt().coerceIn(0, 100)}%",
+            label = "downloading ${(downloadingModel.progress * 100).roundToInt().coerceIn(0, 100)}%",
             progress = downloadingModel.progress,
         )
         else -> null
@@ -107,17 +107,17 @@ fun ChatScreen(
         active != null -> active?.info?.displayName.orEmpty()
         loadingModel != null -> loadingModel.info.displayName
         downloadingModel != null -> downloadingModel.info.displayName
-        downloadedCount > 0 -> "Выбери модель"
-        else -> "Без модели"
+        downloadedCount > 0 -> "Select a model"
+        else -> "No model selected"
     }
     val modelStatus = when {
         active != null -> {
-            "загружена"
+            "loaded"
         }
-        loadingModel != null -> "загрузка в память"
-        downloadingModel != null -> "скачивание"
-        downloadedCount > 0 -> "$downloadedCount скачано"
-        else -> "Скачай или добавь модель"
+        loadingModel != null -> "loading into memory"
+        downloadingModel != null -> "downloading"
+        downloadedCount > 0 -> "$downloadedCount downloaded"
+        else -> "Download or add a model"
     }
 
     LaunchedEffect(toast) {
@@ -198,7 +198,7 @@ fun ChatScreen(
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
-                                Icons.Outlined.ArrowDownward, "В конец",
+                                Icons.Outlined.ArrowDownward, "Scroll to bottom",
                                 tint = MaterialTheme.colorScheme.onSurface,
                             )
                         }
@@ -244,7 +244,7 @@ private fun EmptyState(modifier: Modifier = Modifier) {
             )
         }
         Text(
-            "Чем я могу помочь?",
+            "How can I help?",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurface,

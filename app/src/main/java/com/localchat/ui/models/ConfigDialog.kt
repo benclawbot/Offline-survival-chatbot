@@ -54,7 +54,7 @@ fun ConfigDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                "Конфигурация",
+                "Configuration",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium,
             )
@@ -62,24 +62,24 @@ fun ConfigDialog(
         text = {
             Column {
                 NumberField(
-                    label = "Контекст чата (токены)",
+                    label = "Chat context (tokens)",
                     value = contextSize,
                     onChange = { v -> contextSize = v.filter { it.isDigit() }.take(6) },
                 )
                 Text(
-                    "Сколько истории и RAG-контекста отдавать модели перед ответом.",
+                    "Amount of history and reference context sent to the model.",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp),
                 )
                 Spacer(Modifier.height(10.dp))
                 NumberField(
-                    label = "Токенов на ответ",
+                    label = "Tokens per response",
                     value = maxTokens,
                     onChange = { v -> maxTokens = v.filter { it.isDigit() }.take(6) },
                 )
                 Text(
-                    "Максимум токенов, которые модель может сгенерировать за один ответ.",
+                    "Maximum tokens the model can generate in one response.",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp),
@@ -134,7 +134,7 @@ fun ConfigDialog(
             }) { Text("OK") }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Отмена") }
+            TextButton(onClick = onDismiss) { Text("Cancel") }
         },
     )
 }

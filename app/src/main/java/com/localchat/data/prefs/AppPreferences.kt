@@ -149,7 +149,7 @@ class AppPreferences @Inject constructor(
 
 fun AppLanguage.displayName(): String = when (this) {
     AppLanguage.English -> "English"
-    AppLanguage.Russian -> "Русский"
+    AppLanguage.Russian -> "Russian"
     AppLanguage.Spanish -> "Español"
     AppLanguage.ChineseSimplified -> "简体中文"
     AppLanguage.Hindi -> "हिन्दी"

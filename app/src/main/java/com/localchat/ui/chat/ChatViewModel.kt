@@ -189,7 +189,7 @@ class ChatViewModel @Inject constructor(
     fun toggleThinking() {
         val info = active.value?.info
         if (info?.supportsThinking != true) {
-            _toast.value = if (info == null) "Сначала загрузи модель" else "Эта модель не поддерживает thinking"
+            _toast.value = if (info == null) "Load a model first" else "This model does not support thinking"
             return
         }
         _composer.value = _composer.value.copy(thinking = !_composer.value.thinking)
@@ -209,11 +209,11 @@ class ChatViewModel @Inject constructor(
 
     fun addAttachment(att: Attachment) {
         if (att is Attachment.Image && !effectiveVision(active.value?.info)) {
-            _toast.value = "Для фото нужна vision-модель"
+            _toast.value = "Images require a vision model"
             return
         }
         if (att is Attachment.Document && active.value == null) {
-            _toast.value = "Сначала загрузи модель"
+            _toast.value = "Load a model first"
             return
         }
         _composer.value = _composer.value.copy(attachments = _composer.value.attachments + att)
@@ -280,11 +280,11 @@ class ChatViewModel @Inject constructor(
 
     fun regenerateFrom(messageId: String) {
         if (active.value == null) {
-            _toast.value = "Сначала загрузи модель"
+            _toast.value = "Load a model first"
             return
         }
         if (_composer.value.thinking && active.value?.info?.supportsThinking != true) {
-            _toast.value = "Эта модель не поддерживает thinking"
+            _toast.value = "This model does not support thinking"
             return
         }
         if (_isStreaming.value) return
@@ -358,8 +358,8 @@ class ChatViewModel @Inject constructor(
         val currentText = StringBuilder()
         val currentThinking = StringBuilder()
         // Thinking timer: starts on the first thought token of the current bubble and
-        // grows live (each flush writes it) so the UI can show "Думаю (Xс)"; the final
-        // value persists as "Думал X".
+        // grows live (each flush writes it) so the UI can show "Thinking (Xс)"; the final
+        // value persists as "Thought for X".
         var thinkStartedAt = 0L
         var thinkingMs: Long? = null
         var finalized = false
@@ -404,6 +404,17 @@ class ChatViewModel @Inject constructor(
             // Models that don't follow the tool protocol get NO tools — they answer
             // directly from the (already-injected) context instead of botching tool calls.
             val toolCapable = active.value?.info?.supportsTools ?: true
+            val libraryContext = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                try {
+                    val hits = survivalLibrary.search(userPrompt, 3)
+                    if (hits.isEmpty()) "No matching passages found in the offline library. Say so and do not invent sources."
+                    else hits.joinToString("\n\n", "Offline library passages (cite the source title and URL):\n") {
+                        "Source: ${it.title} (${it.source})\nURL: ${it.url}\n${it.text.take(1200)}"
+                    }
+                } catch (e: Exception) {
+                    "Offline library search failed. Tell the user the library could not be searched; do not invent citations."
+                }
+            }
             val agent = AgentOrchestrator(
                 runtime = runtime,
                 webSearch = webSearch,
@@ -424,7 +435,7 @@ class ChatViewModel @Inject constructor(
             currentAgent = agent
             agent.run(
                 userPrompt = userPrompt,
-                ragContext = ragContext,
+                ragContext = listOf(ragContext, libraryContext).filter { it.isNotBlank() }.joinToString("\n\n"),
                 images = images,
                 enableThinking = enableThinking,
                 history = trimToContext(historyBeforePrompt),
@@ -652,8 +663,8 @@ class ChatViewModel @Inject constructor(
 
         buildString {
             append("[ATTACHED FILES — their content is below. The user's questions are almost always ABOUT ")
-            append("these files. When the user says \"the document\", \"this\", \"задание\"/\"task\"/\"exercise N\", ")
-            append("\"реши\", \"summarize\", etc., ANSWER DIRECTLY FROM THIS CONTENT. Do NOT ask the user to ")
+            append("these files. When the user says \"the document\", \"this\", \"task\"/\"exercise N\", ")
+            append("\"summarize\", etc., ANSWER DIRECTLY FROM THIS CONTENT. Do NOT ask the user to ")
             append("paste or restate text that is already here — read it. For parts beyond an excerpt, call ")
             append("search_files(\"<filename>\"). If page images are attached, also read those.]\n")
             withText.forEach { (doc, content) ->
@@ -772,15 +783,15 @@ class ChatViewModel @Inject constructor(
         val text = composerState.input.trim()
         if (text.isEmpty() && composerState.attachments.isEmpty()) return
         if (active.value == null) {
-            _toast.value = "Сначала загрузи модель"
+            _toast.value = "Load a model first"
             return
         }
         if (composerState.attachments.any { it is Attachment.Image } && !effectiveVision(active.value?.info)) {
-            _toast.value = "Выбранная модель не умеет видеть изображения"
+            _toast.value = "The selected model does not support images"
             return
         }
         if (composerState.thinking && active.value?.info?.supportsThinking != true) {
-            _toast.value = "Эта модель не поддерживает thinking"
+            _toast.value = "This model does not support thinking"
             return
         }
         if (_isStreaming.value) return
@@ -789,7 +800,7 @@ class ChatViewModel @Inject constructor(
             val incognito = settings.value.incognitoDefault
             val chatId = activeChatId.value
                 ?: chatRepo.createChat(
-                    title = text.take(40).ifEmpty { "Новый чат" },
+                    title = text.take(40).ifEmpty { "New chat" },
                     incognito = incognito,
                 ).also {
                     activeChatId.value = it.id

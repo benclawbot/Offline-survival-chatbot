@@ -166,15 +166,15 @@ fun MessageBubble(
     if (confirmDelete) {
         AlertDialog(
             onDismissRequest = { confirmDelete = false },
-            title = { Text("Удалить сообщение?") },
+            title = { Text("Delete message?") },
             confirmButton = {
                 TextButton(onClick = {
                     onDelete()
                     confirmDelete = false
-                }) { Text("Удалить") }
+                }) { Text("Delete") }
             },
             dismissButton = {
-                TextButton(onClick = { confirmDelete = false }) { Text("Отмена") }
+                TextButton(onClick = { confirmDelete = false }) { Text("Cancel") }
             },
         )
     }
@@ -185,7 +185,7 @@ fun MessageBubble(
     documentNameDialog?.let { name ->
         AlertDialog(
             onDismissRequest = { documentNameDialog = null },
-            title = { Text("Файл") },
+            title = { Text("File") },
             text = { Text(name, style = MaterialTheme.typography.bodyMedium) },
             confirmButton = {
                 TextButton(onClick = { documentNameDialog = null }) { Text("OK") }
@@ -231,7 +231,7 @@ private fun ActionsRow(
             modifier = Modifier.size(28.dp),
         ) {
             Icon(
-                Icons.Outlined.ContentCopy, "Копировать",
+                Icons.Outlined.ContentCopy, "Copy",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(16.dp),
             )
@@ -239,7 +239,7 @@ private fun ActionsRow(
         if (!isUser) {
             IconButton(onClick = onRegenerate, modifier = Modifier.size(28.dp)) {
                 Icon(
-                    Icons.Outlined.Refresh, "Повторить",
+                    Icons.Outlined.Refresh, "Retry",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(16.dp),
                 )
@@ -248,26 +248,26 @@ private fun ActionsRow(
         Box {
             IconButton(onClick = { menuOpen = true }, modifier = Modifier.size(28.dp)) {
                 Icon(
-                    Icons.Outlined.MoreHoriz, "Ещё",
+                    Icons.Outlined.MoreHoriz, "More",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(16.dp),
                 )
             }
             DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                 DropdownMenuItem(
-                    text = { Text("Изменить") },
+                    text = { Text("Edit") },
                     leadingIcon = { Icon(Icons.Outlined.Edit, null) },
                     onClick = { menuOpen = false; onEditRequest() },
                 )
                 if (!isUser) {
                     DropdownMenuItem(
-                        text = { Text("Перегенерировать") },
+                        text = { Text("Regenerate") },
                         leadingIcon = { Icon(Icons.Outlined.Refresh, null) },
                         onClick = { menuOpen = false; onRegenerate() },
                     )
                 }
                 DropdownMenuItem(
-                    text = { Text("Удалить") },
+                    text = { Text("Delete") },
                     leadingIcon = { Icon(Icons.Outlined.Delete, null) },
                     onClick = { menuOpen = false; onDeleteRequest() },
                 )
@@ -304,7 +304,7 @@ private fun EditDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Изменить сообщение") },
+        title = { Text("Edit message") },
         text = {
             Column {
                 Surface(
@@ -341,12 +341,12 @@ private fun EditDialog(
                 ) {
                     AddAttachmentButton(
                         icon = Icons.Outlined.Image,
-                        label = "Фото",
+                        label = "Photo",
                         onClick = { imagePicker.launch("image/*") },
                     )
                     AddAttachmentButton(
                         icon = Icons.Outlined.AttachFile,
-                        label = "Файл",
+                        label = "File",
                         onClick = {
                             documentPicker.launch(
                                 arrayOf(
@@ -366,16 +366,16 @@ private fun EditDialog(
                     TextButton(
                         onClick = { onConfirm(text, attachments, true) },
                         enabled = text.isNotBlank() || attachments.isNotEmpty(),
-                    ) { Text("Регенерировать") }
+                    ) { Text("Regenerate") }
                 }
                 TextButton(
                     onClick = { onConfirm(text, attachments, false) },
                     enabled = text.isNotBlank() || attachments.isNotEmpty(),
-                ) { Text("Сохранить") }
+                ) { Text("Save") }
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Отмена") }
+            TextButton(onClick = onDismiss) { Text("Cancel") }
         },
     )
 }
@@ -413,7 +413,7 @@ private fun EditAttachmentChip(att: Attachment, onRemove: () -> Unit) {
                 modifier = Modifier.align(Alignment.TopEnd).size(20.dp),
             ) {
                 IconButton(onClick = onRemove, modifier = Modifier.size(20.dp)) {
-                    Icon(Icons.Outlined.Close, "Убрать", modifier = Modifier.size(12.dp))
+                    Icon(Icons.Outlined.Close, "Remove", modifier = Modifier.size(12.dp))
                 }
             }
         }
@@ -436,7 +436,7 @@ private fun EditAttachmentChip(att: Attachment, onRemove: () -> Unit) {
                     modifier = Modifier.weight(1f),
                 )
                 IconButton(onClick = onRemove, modifier = Modifier.size(18.dp)) {
-                    Icon(Icons.Outlined.Close, "Убрать", modifier = Modifier.size(12.dp))
+                    Icon(Icons.Outlined.Close, "Remove", modifier = Modifier.size(12.dp))
                 }
             }
         }
@@ -449,16 +449,16 @@ private fun ThinkingBlock(text: String, streaming: Boolean, thinkingMs: Long?, m
     val cleanText = remember(text) { cleanThinkingText(text) }
     val preview = remember(cleanText) { thinkingPreview(cleanText) }
     val isAgentTrace = remember(cleanText) {
-        cleanText.contains("**🔎 Поиск:") || cleanText.contains("**📄 Читаю:") ||
-            cleanText.startsWith("**Думаю.**")
+        cleanText.contains("**🔎 Search:") || cleanText.contains("**📄 Читаю:") ||
+            cleanText.startsWith("**Thinking.**")
     }
     val timer = thinkingMs?.takeIf { it > 0 }?.let { formatThinkDuration(it) }
     val headerLabel = when {
-        streaming && isAgentTrace -> "Действую…"
-        streaming -> if (timer != null) "Думаю ($timer)" else "Размышляет…"
-        isAgentTrace -> "Действия агента"
-        timer != null -> "Думал $timer"
-        else -> "Размышление"
+        streaming && isAgentTrace -> "Working…"
+        streaming -> if (timer != null) "Thinking ($timer)" else "Thinking…"
+        isAgentTrace -> "Assistant actions"
+        timer != null -> "Thought for $timer"
+        else -> "Thinking"
     }
     Surface(
         shape = RoundedCornerShape(16.dp),
@@ -586,7 +586,7 @@ private fun ImageFullscreenViewer(uri: String, onDismiss: () -> Unit) {
                     .size(40.dp)
                     .background(Color.Black.copy(alpha = 0.45f), CircleShape),
             ) {
-                Icon(Icons.Outlined.Close, "Закрыть", tint = Color.White)
+                Icon(Icons.Outlined.Close, "Close", tint = Color.White)
             }
         }
     }
@@ -609,7 +609,7 @@ private fun openDocumentExternalImpl(context: Context, att: Attachment.Document)
     runCatching { context.startActivity(Intent.createChooser(intent, att.name)) }
         .onFailure {
             if (it is ActivityNotFoundException) {
-                Toast.makeText(context, "Нет приложения для открытия файла", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "No app can open this file", Toast.LENGTH_SHORT).show()
             }
         }
 }
@@ -663,7 +663,7 @@ private fun formatThinkDuration(ms: Long): String {
     val totalSec = (ms / 1000).toInt()
     val m = totalSec / 60
     val s = totalSec % 60
-    return if (m > 0) "${m}м ${s}с" else "${s}с"
+    return if (m > 0) "${m}m ${s}s" else "${s}s"
 }
 
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
@@ -844,23 +844,23 @@ private fun sourcePreviewsFromPayload(payload: String): List<SourcePreview> = ru
 
 private fun toolStatusLabel(tool: ToolPart): String = when (tool) {
     is ToolPart.Call -> when (tool.name) {
-        "web_research" -> "🔎 Ищу в интернете"
-        "open_url" -> "📄 Читаю страницу"
-        "search_files" -> "🗂️ Ищу в файлах"
+        "web_research" -> "🔎 Searching the web"
+        "open_url" -> "📄 Reading page"
+        "search_files" -> "🗂️ Searching files"
         else -> prettyToolName(tool.name)
     }
     is ToolPart.Result -> when (tool.name) {
-        "web_research" -> if (tool.ok) "✅ Источники прочитаны" else "⚠️ Поиск не удался"
-        "open_url" -> if (tool.ok) "✅ Страница прочитана" else "⚠️ Не удалось открыть"
-        "search_files" -> if (tool.ok) "✅ Найдено в файлах" else "⚠️ В файлах не найдено"
+        "web_research" -> if (tool.ok) "✅ Sources read" else "⚠️ Search failed"
+        "open_url" -> if (tool.ok) "✅ Page read" else "⚠️ Could not open"
+        "search_files" -> if (tool.ok) "✅ Found in files" else "⚠️ Not found in files"
         else -> prettyToolName(tool.name)
     }
 }
 
 private fun prettyToolName(raw: String): String = when (raw) {
-    "web_research" -> "Поиск в интернете"
-    "open_url" -> "Открыть ссылку"
-    "search_files" -> "Поиск в файлах"
+    "web_research" -> "Web search"
+    "open_url" -> "Open link"
+    "search_files" -> "Search files"
     else -> raw
 }
 

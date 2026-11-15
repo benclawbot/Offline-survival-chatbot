@@ -167,20 +167,20 @@ fun AttachmentSheet(
                                 .padding(horizontal = 10.dp, vertical = 10.dp),
                         ) {
                             if (capabilities.imageInput.available) {
-                                MenuActionRow(Icons.Outlined.CameraAlt, "Камера", onCamera)
-                                MenuActionRow(Icons.Outlined.Image, "Фото", onGallery)
+                                MenuActionRow(Icons.Outlined.CameraAlt, "Camera", onCamera)
+                                MenuActionRow(Icons.Outlined.Image, "Photo", onGallery)
                             }
                             if (capabilities.documentInput.available) {
-                                MenuActionRow(Icons.Outlined.AttachFile, "Файл", onDocument)
+                                MenuActionRow(Icons.Outlined.AttachFile, "File", onDocument)
                             }
                             if (capabilities.voiceInput.available) {
-                                MenuActionRow(Icons.Outlined.Mic, "Голос", onVoice)
+                                MenuActionRow(Icons.Outlined.Mic, "Voice", onVoice)
                             }
                             if (capabilities.webSearch.available) {
-                                MenuModeRow(Icons.Outlined.Public, "Поиск в сети", webSearch, onToggleWebSearch)
+                                MenuModeRow(Icons.Outlined.Public, "Web search", webSearch, onToggleWebSearch)
                             }
                             if (capabilities.thinking.available) {
-                                MenuModeRow(Icons.Outlined.Psychology, "Рассуждение", thinking, onToggleThinking)
+                                MenuModeRow(Icons.Outlined.Psychology, "Reasoning", thinking, onToggleThinking)
                             }
                             Box(Modifier.height(2.dp))
                         }

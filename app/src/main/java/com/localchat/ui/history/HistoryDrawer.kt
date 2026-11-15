@@ -125,16 +125,16 @@ fun HistoryDrawer(
     deleteTarget?.let { target ->
         AlertDialog(
             onDismissRequest = { deleteTarget = null },
-            title = { Text("Удалить чат?") },
-            text = { Text("«${target.title}» будет удалён без возможности восстановления.") },
+            title = { Text("Delete chat?") },
+            text = { Text("«${target.title}» will be permanently deleted.") },
             confirmButton = {
                 TextButton(onClick = {
                     onDeleteChat(target.id)
                     deleteTarget = null
-                }) { Text("Удалить") }
+                }) { Text("Delete") }
             },
             dismissButton = {
-                TextButton(onClick = { deleteTarget = null }) { Text("Отмена") }
+                TextButton(onClick = { deleteTarget = null }) { Text("Cancel") }
             },
         )
     }
@@ -155,7 +155,7 @@ private fun NewChatButton(onClick: () -> Unit) {
         ) {
             Icon(Icons.Outlined.Edit, null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
             Text(
-                "Новый чат",
+                "New chat",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontWeight = FontWeight.Medium,
@@ -173,7 +173,7 @@ private fun RenameDialog(
     var text by remember { mutableStateOf(initial) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Переименовать чат") },
+        title = { Text("Rename chat") },
         text = {
             Surface(
                 shape = RoundedCornerShape(16.dp),
@@ -196,10 +196,10 @@ private fun RenameDialog(
             TextButton(
                 onClick = { if (text.isNotBlank()) onConfirm(text.trim()) },
                 enabled = text.isNotBlank(),
-            ) { Text("Сохранить") }
+            ) { Text("Save") }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Отмена") }
+            TextButton(onClick = onDismiss) { Text("Cancel") }
         },
     )
 }
@@ -220,7 +220,7 @@ private fun SearchField(query: String, onQueryChange: (String) -> Unit) {
             Box(Modifier.weight(1f)) {
                 if (query.isEmpty()) {
                     Text(
-                        "Поиск по чатам…",
+                        "Search chats…",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium,
                     )
@@ -268,7 +268,7 @@ private fun ChatRow(
             Box {
                 IconButton(onClick = { menuOpen = true }, modifier = Modifier.size(36.dp)) {
                     Icon(
-                        Icons.Outlined.MoreVert, "Меню",
+                        Icons.Outlined.MoreVert, "Menu",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
@@ -277,7 +277,7 @@ private fun ChatRow(
                     onDismissRequest = { menuOpen = false },
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Переименовать") },
+                        text = { Text("Rename") },
                         leadingIcon = { Icon(Icons.Outlined.Edit, null) },
                         onClick = {
                             menuOpen = false
@@ -285,7 +285,7 @@ private fun ChatRow(
                         },
                     )
                     DropdownMenuItem(
-                        text = { Text("Удалить") },
+                        text = { Text("Delete") },
                         leadingIcon = { Icon(Icons.Outlined.Delete, null) },
                         onClick = {
                             menuOpen = false
@@ -305,8 +305,8 @@ private fun DrawerFooter(onOpenModels: () -> Unit, onOpenSettings: () -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        FooterButton(Icons.Outlined.Memory, "Модели", Modifier.weight(1f), onOpenModels)
-        FooterButton(Icons.Outlined.Settings, "Настройки", Modifier.weight(1f), onOpenSettings)
+        FooterButton(Icons.Outlined.Memory, "Models", Modifier.weight(1f), onOpenModels)
+        FooterButton(Icons.Outlined.Settings, "Settings", Modifier.weight(1f), onOpenSettings)
     }
 }
 
@@ -342,9 +342,9 @@ private fun groupByAge(chats: List<Chat>): List<Pair<String, List<Chat>>> {
     val month = chats.filter { now - it.updatedAt in (7 * day + 1)..(30 * day) }
     val older = chats.filter { now - it.updatedAt > 30 * day }
     return buildList {
-        if (today.isNotEmpty()) add("Сегодня" to today)
-        if (week.isNotEmpty()) add("7 дней" to week)
-        if (month.isNotEmpty()) add("30 дней" to month)
-        if (older.isNotEmpty()) add("Старше" to older)
+        if (today.isNotEmpty()) add("Today" to today)
+        if (week.isNotEmpty()) add("Last 7 days" to week)
+        if (month.isNotEmpty()) add("Last 30 days" to month)
+        if (older.isNotEmpty()) add("Older" to older)
     }
 }

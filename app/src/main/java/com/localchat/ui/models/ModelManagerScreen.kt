@@ -100,13 +100,13 @@ fun ModelManagerScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if (llm.isNotEmpty()) {
-                item("h-llm") { GroupHeader("Чат-модели (${llm.size})") }
+                item("h-llm") { GroupHeader("Chat models (${llm.size})") }
                 items(llm, key = { it.info.id }) { st ->
                     ModelCard(state = st, vm = vm, onConfig = { configTarget = st.info })
                 }
             }
             if (embedding.isNotEmpty()) {
-                item("h-emb") { GroupHeader("Embedding-модели · семантический поиск (${embedding.size})") }
+                item("h-emb") { GroupHeader("Embedding models · semantic search (${embedding.size})") }
                 items(embedding, key = { it.info.id }) { st ->
                     ModelCard(state = st, vm = vm, onConfig = { configTarget = st.info })
                 }
@@ -139,11 +139,11 @@ private fun TopBar(onBack: () -> Unit, onAdd: () -> Unit) {
             modifier = Modifier.size(44.dp),
         ) {
             IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Назад", tint = MaterialTheme.colorScheme.onSurface)
+                Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onSurface)
             }
         }
         Text(
-            "Модели",
+            "Models",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurface,
@@ -156,7 +156,7 @@ private fun TopBar(onBack: () -> Unit, onAdd: () -> Unit) {
             modifier = Modifier.size(44.dp),
         ) {
             IconButton(onClick = onAdd) {
-                Icon(Icons.Outlined.Add, "Добавить", tint = MaterialTheme.colorScheme.onSurface)
+                Icon(Icons.Outlined.Add, "Add", tint = MaterialTheme.colorScheme.onSurface)
             }
         }
     }
@@ -178,7 +178,7 @@ private fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
             Box(Modifier.weight(1f)) {
                 if (query.isEmpty()) {
                     Text(
-                        "Поиск моделей…",
+                        "Search models…",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium,
                     )
@@ -200,7 +200,7 @@ private fun FilterRow(filter: Filter, onFilterChange: (Filter) -> Unit) {
         Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        listOf(Filter.All to "Все", Filter.Downloaded to "Скачано", Filter.Available to "Доступно").forEach { (f, label) ->
+        listOf(Filter.All to "All", Filter.Downloaded to "Downloaded", Filter.Available to "Available").forEach { (f, label) ->
             val active = f == filter
             Surface(
                 onClick = { onFilterChange(f) },
@@ -259,7 +259,7 @@ private fun ModelCard(state: ModelState, vm: ModelManagerViewModel, onConfig: ()
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
-                            Icons.Outlined.Tune, "Конфигурация",
+                            Icons.Outlined.Tune, "Configuration",
                             tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(18.dp),
                         )
@@ -284,7 +284,7 @@ private fun ModelCard(state: ModelState, vm: ModelManagerViewModel, onConfig: ()
                     modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
                 )
                 Text(
-                    "Загружаю модель в память…",
+                    "Loading model into memory…",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp),
@@ -292,7 +292,7 @@ private fun ModelCard(state: ModelState, vm: ModelManagerViewModel, onConfig: ()
             }
             if (state is ModelState.Error) {
                 Text(
-                    "Ошибка: ${state.message}",
+                    "Error: ${state.message}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(top = 10.dp),
@@ -305,27 +305,27 @@ private fun ModelCard(state: ModelState, vm: ModelManagerViewModel, onConfig: ()
             ) {
                 when (state) {
                     is ModelState.Loading -> {
-                        ActionButton("Загружается…", filled = true, modifier = Modifier.fillMaxWidth(), onClick = {})
+                        ActionButton("Loading…", filled = true, modifier = Modifier.fillMaxWidth(), onClick = {})
                     }
                     is ModelState.Loaded -> {
-                        ActionButton("Загружена", filled = true, modifier = Modifier.weight(1f), onClick = { vm.unload() })
-                        ActionButton("Удалить", modifier = Modifier.weight(1f), onClick = { vm.delete(state.info.id) })
+                        ActionButton("Loaded", filled = true, modifier = Modifier.weight(1f), onClick = { vm.unload() })
+                        ActionButton("Delete", modifier = Modifier.weight(1f), onClick = { vm.delete(state.info.id) })
                     }
                     is ModelState.Downloaded -> {
-                        ActionButton("Загрузить", icon = Icons.Outlined.PlayArrow, filled = true,
+                        ActionButton("Load", icon = Icons.Outlined.PlayArrow, filled = true,
                             modifier = Modifier.weight(1f), onClick = { vm.load(state.info.id) })
-                        ActionButton("Удалить", modifier = Modifier.weight(1f), onClick = { vm.delete(state.info.id) })
+                        ActionButton("Delete", modifier = Modifier.weight(1f), onClick = { vm.delete(state.info.id) })
                     }
                     is ModelState.Available -> {
-                        ActionButton("Скачать", icon = Icons.Outlined.Download, filled = true,
+                        ActionButton("Download", icon = Icons.Outlined.Download, filled = true,
                             modifier = Modifier.fillMaxWidth(), onClick = { vm.startDownload(state.info.id) })
                     }
                     is ModelState.Error -> {
-                        ActionButton("Повторить скачивание", icon = Icons.Outlined.Download, filled = true,
+                        ActionButton("Retry download", icon = Icons.Outlined.Download, filled = true,
                             modifier = Modifier.fillMaxWidth(), onClick = { vm.startDownload(state.info.id) })
                     }
                     is ModelState.Downloading -> {
-                        ActionButton("Отменить", icon = Icons.Outlined.Close,
+                        ActionButton("Cancel", icon = Icons.Outlined.Close,
                             modifier = Modifier.fillMaxWidth(), onClick = { vm.cancelDownload(state.info.id) })
                     }
                 }

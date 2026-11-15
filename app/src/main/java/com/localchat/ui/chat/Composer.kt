@@ -93,13 +93,13 @@ fun Composer(
                     ) {
                         if (state.webSearch && capabilities.webSearch.available) CompactModeChip(
                             Icons.Outlined.Public,
-                            "Поиск",
+                            "Search",
                             true,
                             onToggleWebSearch,
                         )
                         if (state.thinking && capabilities.thinking.available) CompactModeChip(
                             Icons.Outlined.Psychology,
-                            "Думать",
+                            "Think",
                             true,
                             onToggleThinking,
                         )
@@ -127,7 +127,7 @@ fun Composer(
                     ) {
                         if (state.input.isEmpty()) {
                             Text(
-                                "Сообщение…",
+                                "Message…",
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.bodyLarge,
                             )
@@ -149,7 +149,7 @@ fun Composer(
                         StopButton(onStop)
                     } else {
                         if (!canSend) {
-                            ComposerIcon(Icons.Outlined.Mic, "Голос") { /* mic */ }
+                            ComposerIcon(Icons.Outlined.Mic, "Voice") { /* mic */ }
                         }
                         SendButton(canSend, onSend)
                     }
@@ -184,7 +184,7 @@ private fun AttachmentPreviewRow(
                             color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
                         ) {
                             Icon(
-                                Icons.Outlined.Close, "Убрать",
+                                Icons.Outlined.Close, "Remove",
                                 tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.size(14.dp).padding(2.dp),
                             )
@@ -223,7 +223,7 @@ private fun AttachmentPreviewRow(
                             modifier = Modifier.align(Alignment.TopEnd).size(22.dp),
                         ) {
                             Icon(
-                                Icons.Outlined.Close, "Убрать",
+                                Icons.Outlined.Close, "Remove",
                                 tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.size(14.dp),
                             )
@@ -262,7 +262,7 @@ private fun PlusButton(open: Boolean, onClick: () -> Unit, modifier: Modifier = 
 private fun PlusIcon(open: Boolean) {
     Icon(
         Icons.Outlined.Add,
-        "Прикрепить",
+        "Attach",
         tint = if (open) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
     )
 }
@@ -284,7 +284,7 @@ private fun SendButton(enabled: Boolean, onClick: () -> Unit) {
     else MaterialTheme.colorScheme.onSurfaceVariant
     Surface(shape = CircleShape, color = bg, modifier = Modifier.size(40.dp)) {
         IconButton(onClick = { if (enabled) onClick() }) {
-            Icon(Icons.Filled.ArrowUpward, "Отправить", tint = fg)
+            Icon(Icons.Filled.ArrowUpward, "Send", tint = fg)
         }
     }
 }
@@ -297,7 +297,7 @@ private fun StopButton(onClick: () -> Unit) {
         modifier = Modifier.size(40.dp),
     ) {
         IconButton(onClick = onClick) {
-            Icon(Icons.Filled.Stop, "Остановить", tint = MaterialTheme.colorScheme.onError)
+            Icon(Icons.Filled.Stop, "Stop", tint = MaterialTheme.colorScheme.onError)
         }
     }
 }
@@ -330,7 +330,7 @@ private fun CompactModeChip(
                 label, style = MaterialTheme.typography.labelSmall,
                 color = fg,
             )
-            Icon(Icons.Outlined.Close, "Отключить", tint = fg, modifier = Modifier.size(13.dp))
+            Icon(Icons.Outlined.Close, "Disable", tint = fg, modifier = Modifier.size(13.dp))
         }
     }
 }

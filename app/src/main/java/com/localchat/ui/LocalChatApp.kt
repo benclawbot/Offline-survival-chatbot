@@ -122,12 +122,12 @@ fun LocalChatApp() {
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
             putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
-            putExtra(RecognizerIntent.EXTRA_PROMPT, "Говори")
+            putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak")
         }
         try {
             voiceInput.launch(intent)
         } catch (_: ActivityNotFoundException) {
-            Toast.makeText(context, "На устройстве нет офлайн-распознавания речи", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Offline speech recognition is unavailable on this device", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -272,7 +272,7 @@ fun LocalChatApp() {
                 info = info,
                 onDismiss = { configTargetId = null },
                 onConfirm = { contextSize, maxTokens, topK, topP, temperature, accelerator, enableSpeculative ->
-                    // Если модель загружена — перезагрузить с новыми параметрами
+                    // Если модель loaded — перезагрузить с новыми параметрами
                     val isLoaded = modelStates.any {
                         it.info.id == id && it is com.localchat.domain.model.ModelState.Loaded
                     }

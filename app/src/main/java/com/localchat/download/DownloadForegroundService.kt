@@ -24,13 +24,13 @@ class DownloadForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()
         ensureChannel()
-        startForegroundCompat(buildNotification(0, "Загрузка моделей", "Подготовка…"))
+        startForegroundCompat(buildNotification(0, "Model downloads", "Preparing…"))
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_UPDATE -> {
-                val title = intent.getStringExtra(EXTRA_TITLE) ?: "Загрузка"
+                val title = intent.getStringExtra(EXTRA_TITLE) ?: "Downloading"
                 val text = intent.getStringExtra(EXTRA_TEXT) ?: ""
                 val percent = intent.getIntExtra(EXTRA_PERCENT, 0)
                 (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
@@ -53,8 +53,8 @@ class DownloadForegroundService : Service() {
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (nm.getNotificationChannel(CHANNEL_ID) != null) return
         nm.createNotificationChannel(
-            NotificationChannel(CHANNEL_ID, "Фоновая загрузка моделей", NotificationManager.IMPORTANCE_LOW)
-                .apply { description = "Удерживает скачивание активным в фоне" }
+            NotificationChannel(CHANNEL_ID, "Background model downloads", NotificationManager.IMPORTANCE_LOW)
+                .apply { description = "Keeps downloads active in the background" }
         )
     }
 

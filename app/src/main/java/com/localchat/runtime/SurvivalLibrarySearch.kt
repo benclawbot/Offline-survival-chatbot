@@ -1,7 +1,7 @@
 package com.localchat.runtime
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.RandomAccessFile
@@ -25,30 +25,32 @@ class SurvivalLibrarySearch @Inject constructor(
         if (terms.isEmpty()) return emptyList()
         val matchAll = terms.joinToString(" ") { "\"${it.replace("\"", "")}\"" }
         val matchAny = terms.joinToString(" OR ") { "\"${it.replace("\"", "")}\"" }
-        val database = SQLiteDatabase.openDatabase(dbFile.path, null, SQLiteDatabase.OPEN_READONLY)
+        val database = BundledSQLiteDriver().open(dbFile.path)
         try {
             val results = mutableListOf<Hit>()
             val matchingIds = runCatching {
-                database.rawQuery("SELECT rowid,rank FROM fts WHERE fts MATCH ? AND rank MATCH 'bm25(4.0, 1.0)' ORDER BY rank LIMIT 300", arrayOf(matchAll)).use { cursor ->
+                database.prepare("SELECT rowid,rank FROM fts WHERE fts MATCH ? AND rank MATCH 'bm25(4.0, 1.0)' ORDER BY rank LIMIT 300").use { cursor ->
+                    cursor.bindText(1, matchAll)
                     val ids = mutableListOf<Long>()
-                    while (cursor.moveToNext()) ids += cursor.getLong(0)
+                    while (cursor.step()) ids += cursor.getLong(0)
                     ids
                 }
             }.getOrDefault(emptyList()).let { first ->
                 if (first.size >= 3 || terms.size == 1) first else
-                    database.rawQuery("SELECT rowid,rank FROM fts WHERE fts MATCH ? AND rank MATCH 'bm25(4.0, 1.0)' ORDER BY rank LIMIT 300", arrayOf(matchAny)).use { cursor ->
+                    database.prepare("SELECT rowid,rank FROM fts WHERE fts MATCH ? AND rank MATCH 'bm25(4.0, 1.0)' ORDER BY rank LIMIT 300").use { cursor ->
+                        cursor.bindText(1, matchAny)
                         val ids = mutableListOf<Long>()
-                        while (cursor.moveToNext()) ids += cursor.getLong(0)
+                        while (cursor.step()) ids += cursor.getLong(0)
                         ids
                     }
             }
             if (matchingIds.isEmpty()) return emptyList()
             val selected = matchingIds.joinToString(",")
             val sourceRows = mutableMapOf<Long, Array<String?>>()
-            database.rawQuery("""SELECT p.id,d.title,s.label,d.url,s.license,f.path,p.offset,p.length
+            database.prepare("""SELECT p.id,d.title,s.label,d.url,s.license,f.path,p.offset,p.length
                 FROM passages p JOIN docs d ON d.id=p.doc_id JOIN sources s ON s.id=d.source_id
-                JOIN files f ON f.id=d.file_id WHERE p.id IN ($selected)""".trimIndent(), null).use { cursor ->
-                while (cursor.moveToNext()) sourceRows[cursor.getLong(0)] = Array(7) { i -> cursor.getString(i + 1) }
+                JOIN files f ON f.id=d.file_id WHERE p.id IN ($selected)""".trimIndent()).use { cursor ->
+                while (cursor.step()) sourceRows[cursor.getLong(0)] = Array(7) { i -> if (cursor.isNull(i + 1)) null else cursor.getText(i + 1) }
             }
             for (passageId in matchingIds) {
                 val row = sourceRows[passageId] ?: continue

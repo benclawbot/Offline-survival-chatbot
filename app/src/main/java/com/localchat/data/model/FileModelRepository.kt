@@ -100,16 +100,16 @@ class FileModelRepository @Inject constructor(
             val target = current.firstOrNull { it.info.id == modelId } ?: return
             if (target is ModelState.Loading) return
             if (target !is ModelState.Downloaded && target !is ModelState.Loaded) {
-                throw IllegalStateException("Сначала скачай модель")
+                throw IllegalStateException("Download the model first")
             }
 
             val path = when (val src = target.info.source) {
                 is ModelSource.LocalFile -> src.absolutePath
                 is ModelSource.HuggingFace -> modelFile(target.info).absolutePath
-                ModelSource.Builtin -> throw IllegalStateException("Для встроенной модели не указан файл")
+                ModelSource.Builtin -> throw IllegalStateException("No file was specified for the built-in model")
             }
             if (!File(path).exists()) {
-                throw IllegalStateException("Файл модели не найден: $path")
+                throw IllegalStateException("Model file not found: $path")
             }
             validateModelFile(target.info, File(path))
 
@@ -161,7 +161,7 @@ class FileModelRepository @Inject constructor(
                 Log.w(TAG, "runtime load failed on ${candidate.accelerator}; trying next backend", t)
             }
         }
-        throw lastError ?: IllegalStateException("Не удалось загрузить модель")
+        throw lastError ?: IllegalStateException("Could not load model")
     }
 
     override suspend fun unload() {
@@ -183,7 +183,7 @@ class FileModelRepository @Inject constructor(
 
         downloads[modelId] = scope.launch {
             DownloadForegroundService.acquire(
-                context, info.displayName, "Подготовка…", percent = 0,
+                context, info.displayName, "Preparing…", percent = 0,
             )
             try {
                 downloadFromHuggingFace(info, source)
@@ -193,7 +193,7 @@ class FileModelRepository @Inject constructor(
                 throw c
             } catch (t: Throwable) {
                 Log.e(TAG, "download failed for $modelId", t)
-                val message = t.message ?: "ошибка"
+                val message = t.message ?: "error"
                 // .part-файл сохраняем — позволит докачать после повторного нажатия.
                 states.value = states.value.map { st ->
                     if (st.info.id == modelId) ModelState.Error(info, message) else st
@@ -225,16 +225,16 @@ class FileModelRepository @Inject constructor(
                     firstResp.disconnect()
                     if (savedToken.isBlank()) {
                         throw IllegalStateException(
-                            "HTTP 401: модель требует аутентификации. " +
-                                "Открой Настройки → HuggingFace, вставь токен с huggingface.co/settings/tokens, " +
-                                "затем прими лицензию модели."
+                            "HTTP 401: model requires authentication. " +
+                                "Open Settings → Hugging Face and enter your token from huggingface.co/settings/tokens, " +
+                                "then accept the model license."
                         )
                     }
                     val retry = openHfConnection(urlStr, token = savedToken, rangeStart = resumeFrom)
                     if (retry.responseCode in 200..299) retry
                     else {
-                        val msg = "HTTP ${retry.responseCode}: токен HuggingFace отклонён. " +
-                            "Проверь токен в Настройках и прими лицензию модели на её странице."
+                        val msg = "HTTP ${retry.responseCode}: Hugging Face token was rejected. " +
+                            "Check your token in Settings and accept the model license on its page."
                         retry.disconnect()
                         throw IllegalStateException(msg)
                     }
@@ -242,8 +242,8 @@ class FileModelRepository @Inject constructor(
                 403 -> {
                     firstResp.disconnect()
                     throw IllegalStateException(
-                        "HTTP 403: доступ к модели не одобрен. " +
-                            "Зайди на страницу модели на huggingface.co и прими условия лицензии."
+                        "HTTP 403: model access has not been approved. " +
+                            "Visit the model page on huggingface.co and accept its license."
                     )
                 }
                 else -> {
@@ -305,7 +305,7 @@ class FileModelRepository @Inject constructor(
                 DownloadForegroundService.update(
                     context,
                     info.displayName,
-                    "Проверка SHA-256…",
+                    "Verifying SHA-256…",
                     100,
                 )
                 val sha = sha256(target)
@@ -313,7 +313,7 @@ class FileModelRepository @Inject constructor(
                 if (!expected.isNullOrBlank() && !sha.equals(expected, ignoreCase = true)) {
                     target.delete()
                     hashSidecar(target).delete()
-                    throw IllegalStateException("SHA-256 не совпал: файл удалён, скачай модель заново")
+                    throw IllegalStateException("SHA-256 mismatch: file deleted; download the model again")
                 }
                 writeHashSidecar(target, sha)
 
@@ -321,7 +321,7 @@ class FileModelRepository @Inject constructor(
                 src.tokenizerFile?.let { tok ->
                     val tokDest = File(target.parentFile, tok.substringAfterLast('/'))
                     if (!tokDest.exists()) {
-                        DownloadForegroundService.update(context, info.displayName, "Загрузка токенайзера…", 100)
+                        DownloadForegroundService.update(context, info.displayName, "Downloading tokenizer…", 100)
                         val tokUrl = "https://huggingface.co/${src.repoId}/resolve/$revision/$tok?download=true"
                         runCatching { downloadAuxFile(tokUrl, tokDest, null) }
                             .recoverCatching { downloadAuxFile(tokUrl, tokDest, savedToken.ifBlank { null }) }
@@ -538,7 +538,7 @@ class FileModelRepository @Inject constructor(
 
     private suspend fun validateModelFile(info: ModelInfo, file: File) = withContext(Dispatchers.IO) {
         if (!file.exists() || file.length() <= 0L) {
-            throw IllegalStateException("Файл модели пустой или не найден")
+            throw IllegalStateException("Model file is empty or missing")
         }
         val sidecar = hashSidecar(file)
         val expected = info.expectedSha256?.takeIf { it.isNotBlank() }
@@ -551,15 +551,15 @@ class FileModelRepository @Inject constructor(
         val recordedSize = recorded.getOrNull(1)?.toLongOrNull()
 
         if (recordedSize != null && recordedSize != file.length()) {
-            throw IllegalStateException("Размер файла модели изменился. Удали и скачай модель заново")
+            throw IllegalStateException("Model file size changed. Delete and download the model again")
         }
         if (expected != null || recordedSha != null) {
             val actual = sha256(file)
             if (expected != null && !actual.equals(expected, ignoreCase = true)) {
-                throw IllegalStateException("SHA-256 модели не совпал. Удали и скачай модель заново")
+                throw IllegalStateException("Model checksum mismatch. Delete and download the model again")
             }
             if (recordedSha != null && !actual.equals(recordedSha, ignoreCase = true)) {
-                throw IllegalStateException("SHA-256 модели изменился. Удали и скачай модель заново")
+                throw IllegalStateException("Model checksum changed. Delete and download the model again")
             }
             if (recordedSha == null) writeHashSidecar(file, actual)
         }
@@ -601,15 +601,15 @@ class FileModelRepository @Inject constructor(
         // litert-community/* — публичные, скачиваются без токена.
         val items = listOf(
             ModelInfo(
-                id = "qwen2-5-0-5b-instruct",
-                displayName = "Qwen 2.5 0.5B Instruct (offline)",
-                sizeBytes = 546_660_344,
-                expectedSha256 = "b7e77f73f73c994bc8a0f067a9bee7ba5db446dcb51c9fe0243e5600482e3478",
+                id = "qwen2-0-5b-instruct",
+                displayName = "Qwen 2 0.5B Instruct (offline)",
+                sizeBytes = 647_377_840,
+                expectedSha256 = "0f01cc004b8eb62b92ba6be85ed05a248ba0d2f78af94c4949b313eccfb4c157",
                 accelerator = Accelerator.GPU,
                 source = ModelSource.HuggingFace(
-                    repoId = "litert-community/Qwen2.5-0.5B-Instruct",
-                    file = "Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv1280.task",
-                    revision = "6c237a59eedeb06a821b21f0a59b03d346ac8bc3",
+                    repoId = "litert-community/Qwen2-0.5B-Instruct",
+                    file = "Qwen2_0.5B_Instruct.litertlm",
+                    revision = "0e209e1",
                 ),
                 contextSize = 4096,
                 maxTokens = 512,
@@ -679,20 +679,6 @@ class FileModelRepository @Inject constructor(
                 ),
                 contextSize = DEFAULT_CONTEXT_TOKENS, maxTokens = DEFAULT_OUTPUT_TOKENS,
                 topK = 64, topP = 0.95f, temperature = 1.0f,
-            ),
-            ModelInfo(
-                id = "qwen2-5-0-5b-instruct",
-                displayName = "Qwen 2.5 0.5B Instruct (q8)",
-                sizeBytes = 546_660_344,
-                accelerator = Accelerator.GPU,
-                source = ModelSource.HuggingFace(
-                    repoId = "litert-community/Qwen2.5-0.5B-Instruct",
-                    file = "Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv1280.task",
-                    revision = "6c237a59eedeb06a821b21f0a59b03d346ac8bc3",
-                ),
-                contextSize = DEFAULT_CONTEXT_TOKENS,
-                maxTokens = DEFAULT_OUTPUT_TOKENS,
-                topK = 20, topP = 0.8f, temperature = 0.7f,
             ),
             ModelInfo(
                 id = "gemma3-1b-it",

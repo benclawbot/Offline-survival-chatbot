@@ -57,7 +57,7 @@ fun ChatTopBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        RoundIconButton(icon = Icons.Outlined.Menu, contentDesc = "Чаты", onClick = onOpenDrawer)
+        RoundIconButton(icon = Icons.Outlined.Menu, contentDesc = "Chats", onClick = onOpenDrawer)
 
         Surface(
             shape = RoundedCornerShape(50),
@@ -113,7 +113,7 @@ fun ChatTopBar(
         // приглушаем и кликом открываем picker, чтобы пользователь сначала её выбрал.
         RoundIconButton(
             icon = Icons.Outlined.Tune,
-            contentDesc = "Настройки модели",
+            contentDesc = "Model settings",
             onClick = if (onOpenConfigEnabled) onOpenConfig else onOpenModelPicker,
             tint = if (onOpenConfigEnabled) MaterialTheme.colorScheme.onSurface
             else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f),

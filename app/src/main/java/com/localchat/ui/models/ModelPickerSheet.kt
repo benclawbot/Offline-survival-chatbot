@@ -76,35 +76,35 @@ fun ModelPickerSheet(
                 )
             }
             if (loaded != null) {
-                item("loaded-label") { SectionLabel("Загружена в память") }
+                item("loaded-label") { SectionLabel("Loaded in memory") }
                 item("loaded-${loaded.info.id}") { LoadedRow(loaded.info, onUnload) }
             }
             if (loading.isNotEmpty()) {
-                item("loading-label") { SectionLabel("Загружается", topPadding = 16) }
+                item("loading-label") { SectionLabel("Loading", topPadding = 16) }
                 items(loading, key = { "loading-${it.info.id}" }) { st ->
                     LoadingRow(st.info)
                 }
             }
             if (downloaded.isNotEmpty()) {
-                item("downloaded-label") { SectionLabel("Скачаны (готовы к загрузке)", topPadding = 16) }
+                item("downloaded-label") { SectionLabel("Downloaded (ready to load)", topPadding = 16) }
                 items(downloaded, key = { "downloaded-${it.info.id}" }) { ds ->
                     DownloadedRow(ds.info, onLoad = { onLoad(ds.info.id) })
                 }
             }
             if (downloading.isNotEmpty()) {
-                item("downloading-label") { SectionLabel("Скачиваются", topPadding = 16) }
+                item("downloading-label") { SectionLabel("Downloading", topPadding = 16) }
                 items(downloading, key = { "downloading-${it.info.id}" }) { st ->
                     DownloadingRow(st, onCancel = { onCancelDownload(st.info.id) })
                 }
             }
             if (errors.isNotEmpty()) {
-                item("errors-label") { SectionLabel("Требуют внимания", topPadding = 16) }
+                item("errors-label") { SectionLabel("Needs attention", topPadding = 16) }
                 items(errors, key = { "error-${it.info.id}" }) { st ->
                     ErrorRow(st, onDownload = { onDownload(st.info.id) })
                 }
             }
             if (available.isNotEmpty()) {
-                item("available-label") { SectionLabel("Доступны для скачивания", topPadding = 16) }
+                item("available-label") { SectionLabel("Available to download", topPadding = 16) }
                 items(available, key = { "available-${it.info.id}" }) { st ->
                     AvailableRow(st.info, onDownload = { onDownload(st.info.id) })
                 }
@@ -122,7 +122,7 @@ fun ModelPickerSheet(
                     ) {
                         Icon(Icons.Outlined.Tune, null, tint = MaterialTheme.colorScheme.onSurface)
                         Text(
-                            "Управление моделями",
+                            "Manage models",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Medium,
@@ -148,7 +148,7 @@ private fun ResourceHeader(memory: DeviceMemorySnapshot) {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    "ОЗУ",
+                    "RAM",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Medium,
@@ -156,7 +156,7 @@ private fun ResourceHeader(memory: DeviceMemorySnapshot) {
                     maxLines = 1,
                 )
                 Text(
-                    "${memory.usedPercent}% · свободно ${humanMb(memory.availMb)} · LocalChat ${humanMb(memory.appMb)}",
+                    "${memory.usedPercent}% · free ${humanMb(memory.availMb)} · LocalChat ${humanMb(memory.appMb)}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -210,7 +210,7 @@ private fun ErrorRow(state: ModelState.Error, onDownload: () -> Unit) {
                     maxLines = 2,
                 )
             }
-            Icon(Icons.Outlined.Download, "Повторить скачивание", tint = MaterialTheme.colorScheme.onErrorContainer)
+            Icon(Icons.Outlined.Download, "Retry download", tint = MaterialTheme.colorScheme.onErrorContainer)
         }
     }
 }
@@ -274,7 +274,7 @@ private fun LoadedRow(info: ModelInfo, onUnload: () -> Unit) {
                 modifier = Modifier.size(40.dp),
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(Icons.Outlined.Stop, "Выгрузить", tint = MaterialTheme.colorScheme.onSurface)
+                    Icon(Icons.Outlined.Stop, "Unload", tint = MaterialTheme.colorScheme.onSurface)
                 }
             }
         }
@@ -313,7 +313,7 @@ private fun DownloadingRow(state: ModelState.Downloading, onCancel: () -> Unit) 
                     modifier = Modifier.size(40.dp),
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Icon(Icons.Outlined.Close, "Отменить", tint = MaterialTheme.colorScheme.onSurface)
+                        Icon(Icons.Outlined.Close, "Cancel", tint = MaterialTheme.colorScheme.onSurface)
                     }
                 }
             }
@@ -349,7 +349,7 @@ private fun DownloadedRow(info: ModelInfo, onLoad: () -> Unit) {
                 )
                 PickerTagRow(info, Modifier.padding(top = 4.dp))
             }
-            Icon(Icons.Outlined.PlayArrow, "Загрузить", tint = MaterialTheme.colorScheme.onSurface)
+            Icon(Icons.Outlined.PlayArrow, "Load", tint = MaterialTheme.colorScheme.onSurface)
         }
     }
 }
@@ -378,7 +378,7 @@ private fun AvailableRow(info: ModelInfo, onDownload: () -> Unit) {
                 )
                 PickerTagRow(info, Modifier.padding(top = 4.dp))
             }
-            Icon(Icons.Outlined.Download, "Скачать", tint = MaterialTheme.colorScheme.onSurface)
+            Icon(Icons.Outlined.Download, "Download", tint = MaterialTheme.colorScheme.onSurface)
         }
     }
 }

@@ -17,8 +17,8 @@ android {
         ndk { abiFilters += "arm64-v8a" }
         minSdk = 31
         targetSdk = 35
-        versionCode = 2
-        versionName = "0.02"
+        versionCode = 3
+        versionName = "0.03"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -82,6 +82,7 @@ dependencies {
     // Shared pure-Kotlin logic (search, RAG/retrieval, agent dialects, PDF planning).
     implementation(project(":core"))
 
+    implementation("androidx.sqlite:sqlite-bundled:2.5.2")
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)

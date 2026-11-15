@@ -24,13 +24,13 @@ class DownloadNotifier @Inject constructor(
     init {
         nm.createNotificationChannel(
             NotificationChannel(
-                CHANNEL_PROGRESS, "Загрузка моделей", NotificationManager.IMPORTANCE_LOW,
-            ).apply { description = "Прогресс скачивания модели" }
+                CHANNEL_PROGRESS, "Model downloads", NotificationManager.IMPORTANCE_LOW,
+            ).apply { description = "Model download progress" }
         )
         nm.createNotificationChannel(
             NotificationChannel(
-                CHANNEL_RESULT, "Результат загрузки", NotificationManager.IMPORTANCE_DEFAULT,
-            ).apply { description = "Уведомления об окончании загрузки" }
+                CHANNEL_RESULT, "Download result", NotificationManager.IMPORTANCE_DEFAULT,
+            ).apply { description = "Download completion notifications" }
         )
     }
 
@@ -44,7 +44,7 @@ class DownloadNotifier @Inject constructor(
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
         val n = NotificationCompat.Builder(context, CHANNEL_PROGRESS)
-            .setContentTitle("Загрузка \"$modelName\"")
+            .setContentTitle("Downloading \"$modelName\"")
             .setContentText("$percent% · $speed")
             .setSmallIcon(android.R.drawable.stat_sys_download)
             .setOngoing(true)
@@ -59,8 +59,8 @@ class DownloadNotifier @Inject constructor(
         if (!canPost()) return
         nm.cancel(notifyId(modelId))
         val n = NotificationCompat.Builder(context, CHANNEL_RESULT)
-            .setContentTitle("\"$modelName\" загружена")
-            .setContentText("Можно загружать модель в чате")
+            .setContentTitle("\"$modelName\" loaded")
+            .setContentText("The model can be loaded in chat")
             .setSmallIcon(android.R.drawable.stat_sys_download_done)
             .setAutoCancel(true)
             .build()
@@ -71,7 +71,7 @@ class DownloadNotifier @Inject constructor(
         if (!canPost()) return
         nm.cancel(notifyId(modelId))
         val n = NotificationCompat.Builder(context, CHANNEL_RESULT)
-            .setContentTitle("Ошибка загрузки \"$modelName\"")
+            .setContentTitle("Download error \"$modelName\"")
             .setContentText(message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setSmallIcon(android.R.drawable.stat_notify_error)

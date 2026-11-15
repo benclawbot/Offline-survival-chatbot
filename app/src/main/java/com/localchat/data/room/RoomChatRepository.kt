@@ -210,7 +210,7 @@ class RoomChatRepository @Inject constructor(
             chats.insert(
                 Chat(
                     id = message.chatId,
-                    title = "Новый чат",
+                    title = "New chat",
                     updatedAt = message.createdAt,
                 ).toEntity()
             )
@@ -236,7 +236,7 @@ class RoomChatRepository @Inject constructor(
             chats.insert(
                 Chat(
                     id = chatId,
-                    title = "Новый чат",
+                    title = "New chat",
                     updatedAt = messages.minOf { it.createdAt },
                 ).toEntity()
             )

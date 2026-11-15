@@ -93,11 +93,11 @@ fun SettingsScreen(
                 modifier = Modifier.size(44.dp),
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Назад", tint = MaterialTheme.colorScheme.onSurface)
+                    Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onSurface)
                 }
             }
             Text(
-                "Настройки",
+                "Settings",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -112,17 +112,17 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Section("Внешний вид")
+            Section("Appearance")
             LanguageSelector(current = settings.language, onSelect = vm::setLanguage)
             ThemeSelector(current = settings.theme, onSelect = vm::setTheme)
             ToggleRow(
-                "Динамические цвета (Material You)",
+                "Dynamic colors (Material You)",
                 settings.dynamicColor,
             ) { vm.setDynamicColor(it) }
 
-            Section("Данные", topPad = 16)
-            NavRow("Очистить историю чатов") { confirmClearChats = true }
-            NavRow("Удалить все модели") { confirmDeleteModels = true }
+            Section("Data", topPad = 16)
+            NavRow("Clear chat history") { confirmClearChats = true }
+            NavRow("Delete all models") { confirmDeleteModels = true }
 
             Section("HuggingFace", topPad = 16)
             HfTokenRow(
@@ -130,9 +130,9 @@ fun SettingsScreen(
                 onChange = vm::setHfToken,
             )
 
-            Section("Семантический поиск (RAG)", topPad = 16)
+            Section("Semantic search (RAG)", topPad = 16)
             ToggleRow(
-                "Семантический поиск по документам",
+                "Semantic document search",
                 settings.semanticRagEnabled,
             ) { vm.setSemanticRag(it) }
             EmbeddingModelSelector(
@@ -142,46 +142,46 @@ fun SettingsScreen(
                 onSelect = vm::setEmbeddingModel,
             )
 
-            Section("Ассистент", topPad = 16)
+            Section("Assistant", topPad = 16)
             SystemPromptRow(
                 prompt = settings.systemPrompt,
                 onChange = vm::setSystemPrompt,
                 onReset = vm::resetSystemPrompt,
             )
 
-            Section("О приложении", topPad = 16)
-            InfoRow("Лицензии", "LiteRT, Markwon, AndroidX")
-            InfoRow("Версия", "0.1.0")
+            Section("About", topPad = 16)
+            InfoRow("Licenses", "LiteRT, Markwon, AndroidX")
+            InfoRow("Version", "0.03")
         }
     }
 
     if (confirmClearChats) {
         AlertDialog(
             onDismissRequest = { confirmClearChats = false },
-            title = { Text("Очистить историю?") },
-            text = { Text("Все сохранённые чаты и сообщения будут удалены.") },
+            title = { Text("Clear history?") },
+            text = { Text("All saved chats and messages will be deleted.") },
             confirmButton = {
                 TextButton(onClick = {
                     confirmClearChats = false
                     vm.clearChats()
-                }) { Text("Очистить") }
+                }) { Text("Clear") }
             },
-            dismissButton = { TextButton(onClick = { confirmClearChats = false }) { Text("Отмена") } },
+            dismissButton = { TextButton(onClick = { confirmClearChats = false }) { Text("Cancel") } },
         )
     }
 
     if (confirmDeleteModels) {
         AlertDialog(
             onDismissRequest = { confirmDeleteModels = false },
-            title = { Text("Удалить модели?") },
-            text = { Text("Скачанные файлы моделей будут удалены, список доступных моделей останется.") },
+            title = { Text("Delete models?") },
+            text = { Text("Downloaded model files will be deleted. Available models will remain listed.") },
             confirmButton = {
                 TextButton(onClick = {
                     confirmDeleteModels = false
                     vm.deleteAllModels()
-                }) { Text("Удалить") }
+                }) { Text("Delete") }
             },
-            dismissButton = { TextButton(onClick = { confirmDeleteModels = false }) { Text("Отмена") } },
+            dismissButton = { TextButton(onClick = { confirmDeleteModels = false }) { Text("Cancel") } },
         )
     }
 }
@@ -202,7 +202,7 @@ private fun LanguageSelector(current: AppLanguage, onSelect: (AppLanguage) -> Un
             ) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        "Язык интерфейса",
+                        "Interface language",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -240,9 +240,9 @@ private fun ThemeSelector(current: ThemeMode, onSelect: (ThemeMode) -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             val items = listOf(
-                ThemeMode.System to "Системная",
-                ThemeMode.Light to "Светлая",
-                ThemeMode.Dark to "Тёмная",
+                ThemeMode.System to "System",
+                ThemeMode.Light to "Light",
+                ThemeMode.Dark to "Dark",
             )
             items.forEach { (mode, label) ->
                 val active = mode == current
@@ -282,8 +282,8 @@ private fun EmbeddingModelSelector(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
-                "Нет скачанных embedding-моделей. Откройте «Модели» → раздел Embedding и скачайте " +
-                    "(например, EmbeddingGemma). До этого используется лексический поиск.",
+                "No embedding model is installed. Open Models → Embedding and download one " +
+                    "(for example, EmbeddingGemma). Lexical search is used in the meantime.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
@@ -306,7 +306,7 @@ private fun EmbeddingModelSelector(
             ) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        "Модель эмбеддингов",
+                        "Embedding model",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -398,7 +398,7 @@ private fun HfTokenRow(token: String, onChange: (String) -> Unit) {
     ) {
         Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             Text(
-                "Токен HuggingFace",
+                "Hugging Face token",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -436,7 +436,7 @@ private fun HfTokenRow(token: String, onChange: (String) -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    "Нужен для скачивания Gemma. Создать: huggingface.co/settings/tokens",
+                    "Needed to download Gemma. Create one at huggingface.co/settings/tokens",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f),
@@ -447,7 +447,7 @@ private fun HfTokenRow(token: String, onChange: (String) -> Unit) {
                     color = MaterialTheme.colorScheme.surface,
                 ) {
                     Text(
-                        if (revealed) "Скрыть" else "Показать",
+                        if (revealed) "Hide" else "Show",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
@@ -476,7 +476,7 @@ private fun SystemPromptRow(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    "Системный промпт",
+                    "System prompt",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f),
@@ -489,7 +489,7 @@ private fun SystemPromptRow(
                     color = MaterialTheme.colorScheme.surface,
                 ) {
                     Text(
-                        "Сброс",
+                        "Reset",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
@@ -516,7 +516,7 @@ private fun SystemPromptRow(
                     Box {
                         if (local.isEmpty()) {
                             Text(
-                                "Введите системный промпт",
+                                "Enter a system prompt",
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.bodyMedium,
                             )

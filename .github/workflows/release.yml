@@ -1,4 +1,4 @@
-name: Build and release v0.02
+name: Build and release v0.03
 # Builds the checked-in main branch with checksum-verified assets.
 
 on:
@@ -23,6 +23,19 @@ jobs:
           java-version: '21'
       - name: Fetch verified offline assets
         run: bash scripts/fetch-offline-assets.sh
+      - name: Verify model starts on CPU
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash gradlew :harness:run --no-daemon --args="app/src/main/assets/Qwen2_0.5B_Instruct.litertlm Hello" | tee model-smoke.log
+          grep -q "engine initialized" model-smoke.log
+      - name: Verify offline index supports FTS5 searches
+        shell: bash
+        run: |
+          set -euo pipefail
+          unzip -p app/src/main/assets/library-lite.zip index.sqlite > /tmp/survival-index.sqlite
+          python3 -c "import sqlite3; c=sqlite3.connect('file:/tmp/survival-index.sqlite?mode=ro',uri=True); assert c.execute(\"SELECT rowid FROM fts WHERE fts MATCH ? ORDER BY rank LIMIT 1\", ('water',)).fetchone()"
+          rm /tmp/survival-index.sqlite
       - name: Build the all-in-one APK
         run: bash gradlew :app:assembleDebug --no-daemon
       - name: Check APK size and signature
@@ -35,12 +48,12 @@ jobs:
           echo "APK size: $bytes bytes"
           test "$bytes" -lt 2147483648
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
-          cp "$apk" Offline-Survival-Chatbot-v0.02.apk
-          sha256sum Offline-Survival-Chatbot-v0.02.apk > Offline-Survival-Chatbot-v0.02.apk.sha256
-      - name: Publish v0.02
+          cp "$apk" Offline-Survival-Chatbot-v0.03.apk
+          sha256sum Offline-Survival-Chatbot-v0.03.apk > Offline-Survival-Chatbot-v0.03.apk.sha256
+      - name: Publish v0.03
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create v0.02 Offline-Survival-Chatbot-v0.02.apk Offline-Survival-Chatbot-v0.02.apk.sha256 \
-            --target "$GITHUB_SHA" --title "Offline Survival Chatbot v0.02" \
-            --notes "Experimental ARM64 build with a new icon and smaller package. Installation and runtime on the CMF Phone 2 Pro have not yet been verified. Includes the Qwen model and Essentials offline reference library. Signed with an automatically generated debug key; future builds may require uninstalling this version first. Verify safety-critical information with authoritative sources."
+          gh release create v0.03 Offline-Survival-Chatbot-v0.03.apk Offline-Survival-Chatbot-v0.03.apk.sha256 \
+            --target "$GITHUB_SHA" --title "Offline Survival Chatbot v0.03" \
+            --notes "Experimental ARM64 build with an English interface, bundled FTS5 search, automatic library retrieval, and a compatible Qwen2 model. On-device installation and inference are not yet verified. Includes the Qwen model and Essentials offline reference library. Signed with an automatically generated debug key; future builds may require uninstalling this version first. Verify safety-critical information with authoritative sources."

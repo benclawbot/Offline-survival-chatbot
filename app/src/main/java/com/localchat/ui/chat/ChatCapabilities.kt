@@ -20,20 +20,20 @@ data class ChatCapabilities(
  *   preferred over [ModelInfo.supportsVision], which is only a family-based guess.
  */
 fun chatCapabilitiesFor(model: ModelInfo?, visionOverride: Boolean? = null): ChatCapabilities {
-    val noModel = "Сначала загрузи модель"
+    val noModel = "Load a model first"
     val vision = visionOverride ?: model?.supportsVision == true
     return ChatCapabilities(
         imageInput = when {
             model == null -> Capability(false, noModel)
             vision -> Capability(true)
-            else -> Capability(false, "Нужна vision-модель")
+            else -> Capability(false, "A vision model is required")
         },
         documentInput = if (model != null) Capability(true) else Capability(false, noModel),
         voiceInput = Capability(true),
         thinking = when {
             model == null -> Capability(false, noModel)
             model.supportsThinking -> Capability(true)
-            else -> Capability(false, "Модель не поддерживает thinking")
+            else -> Capability(false, "The model does not support thinking")
         },
         webSearch = Capability(false, "Offline build: local library search is always enabled"),
     )

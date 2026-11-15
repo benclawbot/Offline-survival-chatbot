@@ -202,7 +202,7 @@ class LiteRtRuntimeImpl @Inject constructor(
                 tools = emptyList(),
                 initialMessages = initialMessages.toLiteRtMessages(),
                 // Split the model's reasoning into channels["thought"] so it lands in the
-                // collapsible "Думал" block and never leaks into the visible answer.
+                // collapsible "Thought for" block and never leaks into the visible answer.
                 // Markers differ by family (verified on-device + harness render probe):
                 //   ChatML (Qwen3): <think> … </think>
                 //   Gemma 4:        <|channel>thought … <channel|>

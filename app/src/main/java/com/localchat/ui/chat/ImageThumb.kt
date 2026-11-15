@@ -51,7 +51,7 @@ fun ImageThumb(uri: String, sizeDp: Int) {
         bmp?.let { img ->
             Image(
                 bitmap = img,
-                contentDescription = "Изображение",
+                contentDescription = "Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(sizeDp.dp),
             )
@@ -77,7 +77,7 @@ fun FullscreenImage(uri: String, modifier: Modifier = Modifier) {
         bmp?.let { img ->
             Image(
                 bitmap = img,
-                contentDescription = "Изображение",
+                contentDescription = "Image",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.fillMaxSize(),
             )

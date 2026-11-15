@@ -24,8 +24,8 @@ class RuntimeNotifier @Inject constructor(
     init {
         nm.createNotificationChannel(
             NotificationChannel(
-                CHANNEL_RUNTIME, "Загруженная модель", NotificationManager.IMPORTANCE_LOW,
-            ).apply { description = "Уведомление пока модель в памяти" }
+                CHANNEL_RUNTIME, "Loaded model", NotificationManager.IMPORTANCE_LOW,
+            ).apply { description = "Notification while model is loaded" }
         )
     }
 
@@ -43,12 +43,12 @@ class RuntimeNotifier @Inject constructor(
         )
         val n = NotificationCompat.Builder(context, CHANNEL_RUNTIME)
             .setContentTitle(modelName)
-            .setContentText("Загружена в память · $accelerator")
+            .setContentText("Loaded in memory · $accelerator")
             .setSmallIcon(android.R.drawable.ic_menu_compass)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setContentIntent(openIntent)
-            .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Выгрузить", unloadIntent)
+            .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Unload", unloadIntent)
             .build()
         runCatching { nm.notify(NOTIFY_RUNTIME, n) }
     }

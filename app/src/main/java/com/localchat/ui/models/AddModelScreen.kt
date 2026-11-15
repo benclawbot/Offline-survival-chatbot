@@ -70,11 +70,11 @@ fun AddModelScreen(
                 modifier = Modifier.size(44.dp),
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Назад", tint = MaterialTheme.colorScheme.onSurface)
+                    Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onSurface)
                 }
             }
             Text(
-                "Добавить модель",
+                "Add model",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -89,12 +89,12 @@ fun AddModelScreen(
         ) {
             FieldLabel("HuggingFace repo ID")
             FormField(repoId, onChange = { repoId = it }, placeholder = "google/gemma-3-it-litert")
-            FieldLabel("Файл (.litertlm / .task)", topPadding = 16)
+            FieldLabel("File (.litertlm / .task)", topPadding = 16)
             FormField(file, onChange = { file = it }, placeholder = "gemma-3-1b-it-int4.litertlm")
-            FieldLabel("Имя для отображения", topPadding = 16)
+            FieldLabel("Display name", topPadding = 16)
             FormField(displayName, onChange = { displayName = it }, placeholder = "Gemma 3 1B")
 
-            FieldLabel("Размер контекста (токены)", topPadding = 16)
+            FieldLabel("Context size (tokens)", topPadding = 16)
             FormField(
                 value = contextSize,
                 onChange = { v -> contextSize = v.filter { it.isDigit() } },
@@ -102,13 +102,13 @@ fun AddModelScreen(
                 keyboardType = KeyboardType.Number,
             )
 
-            FieldLabel("Где запускать", topPadding = 16)
+            FieldLabel("Execution device", topPadding = 16)
             AcceleratorSelector(current = accelerator, onSelect = { accelerator = it })
 
             Box(Modifier.padding(top = 16.dp)) {
-                CheckboxRow("Поддерживает vision", vision) { vision = it }
+                CheckboxRow("Supports vision", vision) { vision = it }
             }
-            CheckboxRow("Поддерживает thinking", thinking) { thinking = it }
+            CheckboxRow("Supports thinking", thinking) { thinking = it }
 
             val ctx = contextSize.toIntOrNull() ?: 0
             val canSubmit = repoId.isNotBlank() && file.isNotBlank() && displayName.isNotBlank() && ctx > 0
@@ -133,7 +133,7 @@ fun AddModelScreen(
                 modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 24.dp),
             ) {
                 Text(
-                    "Добавить",
+                    "Add",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Medium,
                     color = if (canSubmit) MaterialTheme.colorScheme.onPrimary
