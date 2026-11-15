@@ -1,0 +1,35 @@
+# Compiled / build
+build/
+.gradle/
+.kotlin/
+local.properties
+.idea/
+*.iml
+captures/
+.cxx/
+*.apk
+*.aab
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IntelliJ
+*.iws
+out/
+
+# Keystores
+*.jks
+*.keystore
+
+# Models / weights (huge)
+*.task
+*.tflite
+*.bin
+*.litertlm
+
+# Dev artifacts (screenshots / UI dumps / scratch) at the repo root
+/screenshot_*.png
+/u_*.xml
+/window*.xml
+/tmpSearchDebug.kt

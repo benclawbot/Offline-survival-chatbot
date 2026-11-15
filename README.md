@@ -1,6 +1,6 @@
 # Offline Survival Chatbot
 
-![Offline Survival Chatbot hero](docs/images/offline-survival-chatbot-hero.png)
+![Offline Survival Chatbot hero](.github/social-preview.jpg)
 
 GitHub social preview: [`.github/social-preview.jpg`](.github/social-preview.jpg) (1280 × 640, about 153 KB). Set this image in **Repository → Settings → General → Social preview** to update the link card.
 

@@ -1,0 +1,76 @@
+package com.localchat.ui.models
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.localchat.domain.model.Accelerator
+import com.localchat.domain.model.ModelState
+import com.localchat.domain.repo.ModelRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class ModelManagerViewModel @Inject constructor(
+    private val repo: ModelRepository,
+) : ViewModel() {
+
+    val states = repo.observeStates()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList<ModelState>())
+
+    private val _toast = MutableStateFlow<String?>(null)
+    val toast = _toast.asStateFlow()
+    fun consumeToast() { _toast.value = null }
+
+    fun load(id: String) = viewModelScope.launch {
+        runCatching { repo.load(id) }.onFailure {
+            _toast.value = "Не удалось загрузить: ${it.message ?: "ошибка"}"
+        }
+    }
+    fun unload() = viewModelScope.launch { runCatching { repo.unload() } }
+    fun startDownload(id: String) = viewModelScope.launch {
+        runCatching { repo.startDownload(id) }.onFailure {
+            _toast.value = "Скачивание не удалось: ${it.message ?: "ошибка"}"
+        }
+    }
+    fun cancelDownload(id: String) = viewModelScope.launch { runCatching { repo.cancelDownload(id) } }
+    fun delete(id: String) = viewModelScope.launch { runCatching { repo.delete(id) } }
+    fun deleteAll() = viewModelScope.launch {
+        runCatching { repo.deleteAll() }.onFailure {
+            _toast.value = "Не удалось удалить модели: ${it.message ?: "ошибка"}"
+        }
+    }
+
+    fun updateConfig(
+        modelId: String,
+        contextSize: Int,
+        maxTokens: Int,
+        topK: Int,
+        topP: Float,
+        temperature: Float,
+        accelerator: Accelerator,
+        enableSpeculative: Boolean,
+        reload: Boolean = false,
+    ) = viewModelScope.launch {
+        runCatching {
+            repo.updateConfig(modelId, contextSize, maxTokens, topK, topP, temperature, accelerator, enableSpeculative)
+        }.onFailure {
+            _toast.value = "Не удалось сохранить: ${it.message ?: "ошибка"}"
+        }
+    }
+
+    fun addCustom(
+        repoId: String,
+        file: String,
+        displayName: String,
+        vision: Boolean,
+        thinking: Boolean,
+        contextSize: Int,
+        accelerator: Accelerator,
+    ) = viewModelScope.launch {
+        repo.addCustom(repoId, file, displayName, vision, thinking, contextSize, accelerator)
+    }
+}

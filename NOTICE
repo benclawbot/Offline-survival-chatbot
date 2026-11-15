@@ -1,0 +1,27 @@
+LocalChat
+Copyright 2026 LocalChat contributors
+
+This product includes software developed as part of the Google AI Edge
+ecosystem and other open-source projects. Their licenses and copyrights are
+retained by their respective owners:
+
+- LiteRT-LM (com.google.ai.edge.litertlm) — Apache License 2.0
+  https://github.com/google-ai-edge/LiteRT-LM
+- AI Edge On-Device RAG SDK (com.google.ai.edge.localagents:localagents-rag) — Apache License 2.0
+  https://github.com/google-ai-edge/ai-edge-apis
+- EmbeddingGemma / Gemma models — Gemma Terms of Use
+  https://ai.google.dev/gemma/terms  (models are downloaded by the user at runtime, not bundled)
+- PdfBox-Android (com.tom-roush:pdfbox-android) — Apache License 2.0
+- jsoup (org.jsoup:jsoup) — MIT License
+- Markwon (io.noties.markwon) — Apache License 2.0
+- AndroidX / Jetpack Compose / Room / DataStore — Apache License 2.0
+- Dagger Hilt (com.google.dagger) — Apache License 2.0
+- Kotlin & kotlinx.coroutines / kotlinx.serialization (JetBrains) — Apache License 2.0
+
+The architecture and several UI patterns were studied from the
+google-ai-edge/gallery reference app (Apache License 2.0). LocalChat is an
+independent rewrite, not a fork.
+
+Model weights are NOT distributed with this repository; they are downloaded
+on demand from Hugging Face by the end user, subject to each model's own
+license (e.g. the Gemma Terms of Use).
