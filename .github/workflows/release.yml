@@ -1,4 +1,5 @@
 name: Build and release v0.01
+# Builds the checked-in main branch with checksum-verified assets.
 
 on:
   workflow_dispatch:
