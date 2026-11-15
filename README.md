@@ -1,8 +1,8 @@
 # Offline Survival Chatbot
 
-![Offline Survival Chatbot hero](.github/social-preview.jpg)
+![Offline Survival Chatbot hero](.github/social-preview-v2.jpg)
 
-GitHub social preview: [`.github/social-preview.jpg`](.github/social-preview.jpg) (1280 × 640, about 153 KB). Set this image in **Repository → Settings → General → Social preview** to update the link card.
+GitHub social preview: [`.github/social-preview-v2.jpg`](.github/social-preview-v2.jpg) (1280 × 640, compact JPEG). Set this image in **Repository → Settings → General → Social preview** to update the link card.
 
 **An offline-first Android chatbot for finding practical guidance in a searchable survival reference library.** It combines a compact on-device language model with the Essentials collection from [Survival LLM](https://github.com/anonnerdfrenzy/survival-llm). Once installed and set up, chat and reference lookup work without a network connection.
 
@@ -55,7 +55,7 @@ First fetch the pinned, checksum-verified model and Essentials pack, then build:
 ./gradlew :app:assembleDebug
 ```
 
-The binary assets and APK are intentionally excluded from Git history because they total multiple gigabytes. The compact social preview image is `.github/social-preview.jpg` (1280 × 640, about 153 KB); set it in **Repository → Settings → General → Social preview** to update the repository link card.
+The binary assets and APK are intentionally excluded from Git history because they total multiple gigabytes. The compact social preview image is `.github/social-preview-v2.jpg` (1280 × 640, compact JPEG); set it in **Repository → Settings → General → Social preview** to update the repository link card.
 
 ## Suggested repository topics
 
