@@ -1,0 +1,45 @@
+name: Build and release v0.01
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/release.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Fetch verified offline assets
+        run: bash scripts/fetch-offline-assets.sh
+      - name: Build the all-in-one APK
+        run: bash gradlew :app:assembleDebug --no-daemon
+      - name: Check APK size and signature
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk=app/build/outputs/apk/debug/app-debug.apk
+          test -f "$apk"
+          bytes=$(stat -c %s "$apk")
+          echo "APK size: $bytes bytes"
+          test "$bytes" -lt 2147483648
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
+          cp "$apk" Offline-Survival-Chatbot-v0.01.apk
+          sha256sum Offline-Survival-Chatbot-v0.01.apk > Offline-Survival-Chatbot-v0.01.apk.sha256
+      - name: Publish v0.01
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create v0.01 Offline-Survival-Chatbot-v0.01.apk Offline-Survival-Chatbot-v0.01.apk.sha256 \
+            --target "$GITHUB_SHA" --title "Offline Survival Chatbot v0.01" \
+            --notes "First experimental all-in-one Android build. Includes the Qwen model and Essentials offline reference library. Signed with an automatically generated debug key; future builds may require uninstalling this version first. Verify safety-critical information with authoritative sources."
