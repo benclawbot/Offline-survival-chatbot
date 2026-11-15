@@ -35,10 +35,10 @@ The library is primarily English-language. It is a curated offline collection, n
 - Android 12 or newer (minimum API 31)
 - 64-bit ARM device recommended; built for `arm64-v8a`
 - Allow installation from the file manager/browser used to open the APK
-- APK size: approximately 2.4 GB
+- APK size: approximately 2.05 GB
 - Plan for several gigabytes of free space for Android’s app install and the extracted model and library; leave additional room for the OS and your other apps
 
-Install the all-in-one APK, open **Offline Survival Chatbot**, and leave it open through the first-run extraction. The locally built APK is signed with a debug certificate for direct sideloading. It is suitable for installation, but future updates signed with a different key will not install over it; uninstalling first removes app data. A GitHub release has not yet been published.
+Download the [v0.01 all-in-one APK](https://github.com/benclawbot/Offline-survival-chatbot/releases/tag/v0.01), install it, and open **Offline Survival Chatbot**, and leave it open through the first-run extraction. The release APK is signed with a debug certificate for direct sideloading. It is suitable for installation, but future updates signed with a different key will not install over it; uninstalling first removes app data.
 
 ## How local search works
 
@@ -55,7 +55,7 @@ First fetch the pinned, checksum-verified model and Essentials pack, then build:
 ./gradlew :app:assembleDebug
 ```
 
-The binary assets and APK are intentionally excluded from Git history because they total multiple gigabytes. The compact social preview image is `.github/social-preview-v2.jpg` (1280 × 640, compact JPEG); set it in **Repository → Settings → General → Social preview** to update the repository link card.
+The binary assets and APK are intentionally excluded from Git history because they total multiple gigabytes. The all-in-one APK and its SHA-256 checksum are available in the v0.01 release. The compact social preview image is `.github/social-preview-v2.jpg` (1280 × 640, compact JPEG); set it in **Repository → Settings → General → Social preview** to update the repository link card.
 
 ## Suggested repository topics
 
