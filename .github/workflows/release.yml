@@ -1,5 +1,5 @@
 name: Build and release v0.04
-# Builds the checked-in main branch with checksum-verified assets and the smaller model.
+# Builds the checked-in main branch with verified assets and passage checks.
 
 on:
   workflow_dispatch:
