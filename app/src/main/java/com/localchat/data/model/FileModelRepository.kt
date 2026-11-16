@@ -603,6 +603,7 @@ class FileModelRepository @Inject constructor(
             ModelInfo(
                 id = "qwen3-0-6b-instruct",
                 displayName = "Qwen 3 0.6B Instruct (offline)",
+                supportsTools = false,
                 sizeBytes = 344_437_808,
                 expectedSha256 = "e3e290109da4388d65a17510a0c66af91c8039f52d2c465868dbc43c09a776cf",
                 accelerator = Accelerator.GPU,

@@ -419,7 +419,7 @@ class ChatViewModel @Inject constructor(
                 runtime = runtime,
                 webSearch = webSearch,
                 fetcher = webFetcher,
-                systemPrompt = settings.value.systemPrompt,
+                systemPrompt = settings.value.systemPrompt + "\nReference passages are provided automatically below. Answer the user directly from them, without calling tools or copying the instructions. Cite source titles and URLs when available.",
                 webToolsEnabled = false,
                 retriever = if (toolCapable) retriever else null,
                 survivalLibrary = if (toolCapable) survivalLibrary else null,

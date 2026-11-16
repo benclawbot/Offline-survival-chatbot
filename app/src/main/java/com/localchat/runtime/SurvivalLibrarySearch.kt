@@ -19,7 +19,7 @@ class SurvivalLibrarySearch @Inject constructor(
     fun search(query: String, limit: Int = 4): List<Hit> {
         val root = File(context.filesDir, "survival/Library")
         val dbFile = File(root, "index.sqlite")
-        if (!dbFile.isFile) return emptyList()
+        check(dbFile.isFile) { "Offline library index is missing. Restart the app to complete setup." }
         val terms = query.lowercase().split(Regex("[^\\p{L}\\p{N}]+"))
             .filter { it.length >= 2 }.distinct().take(12)
         if (terms.isEmpty()) return emptyList()
@@ -50,7 +50,7 @@ class SurvivalLibrarySearch @Inject constructor(
             database.prepare("""SELECT p.id,d.title,s.label,d.url,s.license,f.path,p.offset,p.length
                 FROM passages p JOIN docs d ON d.id=p.doc_id JOIN sources s ON s.id=d.source_id
                 JOIN files f ON f.id=d.file_id WHERE p.id IN ($selected)""".trimIndent()).use { cursor ->
-                while (cursor.step()) sourceRows[cursor.getLong(0)] = Array(7) { i -> if (cursor.isNull(i + 1)) null else cursor.getText(i + 1) }
+                while (cursor.step()) sourceRows[cursor.getLong(0)] = Array(7) { i -> if (cursor.isNull(i + 1)) null else if (i >= 5) cursor.getLong(i + 1).toString() else cursor.getText(i + 1) }
             }
             for (passageId in matchingIds) {
                 val row = sourceRows[passageId] ?: continue
@@ -63,8 +63,9 @@ class SurvivalLibrarySearch @Inject constructor(
                 val offset = row[5]?.toLongOrNull() ?: continue
                 val length = (row[6]?.toLongOrNull() ?: 0L).coerceIn(0, 24_000)
                 if (length == 0L) continue
-                val shard = File(root, path).canonicalFile
-                if (!shard.path.startsWith(root.canonicalPath + File.separator) || !shard.isFile) continue
+                val textRoot = File(root, "text").canonicalFile
+                val shard = File(textRoot, path).canonicalFile
+                if (!shard.path.startsWith(textRoot.path + File.separator) || !shard.isFile) continue
                 val bytes = ByteArray(length.toInt())
                 val text = RandomAccessFile(shard, "r").use { file ->
                     if (offset >= file.length()) return@use ""

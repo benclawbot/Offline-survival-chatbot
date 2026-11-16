@@ -158,7 +158,7 @@ class AgentOrchestrator(
             webToolsEnabled = webToolsEnabled,
             retrieverEnabled = retriever != null || survivalLibrary != null,
         )
-        val toolsHeader = dialect.protocol(availableTools)
+        val toolsHeader = if (availableTools.isEmpty()) "" else dialect.protocol(availableTools)
         val scratchpad = Scratchpad(
             header = toolsHeader,
             ragContext = ragContext,
@@ -190,7 +190,7 @@ class AgentOrchestrator(
                 tokenSource.stream(
                     prompt = scratchpad.render(),
                     images = if (toolCalls == 0) images else emptyList(),
-                    extraContext = if (enableThinking) mapOf("enable_thinking" to "true") else emptyMap(),
+                    extraContext = mapOf("enable_thinking" to enableThinking.toString()),
                 ).collect { chunk ->
                     when (chunk) {
                         is InferenceChunk.Token -> {
@@ -204,7 +204,7 @@ class AgentOrchestrator(
                                 emit(AgentEvent.TextDelta(visible.substring(lastEmittedLen)))
                                 lastEmittedLen = visible.length
                             }
-                            dialect.parseCall(turnText.toString())?.let { call ->
+                            (if (availableTools.isNotEmpty()) dialect.parseCall(turnText.toString()) else null)?.let { call ->
                                 pendingCall = call
                                 selfStopped = true
                                 runCatching { tokenSource.stop() }

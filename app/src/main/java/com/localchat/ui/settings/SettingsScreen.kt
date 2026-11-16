@@ -151,7 +151,7 @@ fun SettingsScreen(
 
             Section("About", topPad = 16)
             InfoRow("Licenses", "LiteRT, Markwon, AndroidX")
-            InfoRow("Version", "0.03")
+            InfoRow("Version", "0.04")
         }
     }
 
